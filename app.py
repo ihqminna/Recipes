@@ -4,12 +4,15 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Tervetuloa sovellukseen!"
+    return "<h1>Tervetuloa sovellukseen!</h1>"
 
 @app.route("/reseptit")
 def recipes():
-    return "Reseptit"
+    return "<h1>Reseptit</h1>"
 
 @app.route("/reseptit/resepti1")
 def resepti1():
-    return "Resepti1"
+    return "<h1>Resepti1</h1>"
+
+if __name__ == "__main__":
+    app.run(debug=True)
