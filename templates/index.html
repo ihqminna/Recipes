@@ -14,7 +14,9 @@
   </header>
   <div class="layout">
     <div class="sidebar">
-      <img width="100%" src="/static/eggplant.png" alt="Munakoiso">
+      {% for i in range(10) %}
+        <img src="/static/eggplant.png" alt="Munakoiso">
+      {% endfor %}
     </div>
     <div class="main"> 
       <h1>Tervetuloa reseptikirjastoon</h1>

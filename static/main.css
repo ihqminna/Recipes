@@ -26,11 +26,13 @@ body{
     flex-direction: column;
     width: 8%;
     height: 100vh;
-    margin: 2%;
+    margin: 4px 4px 0px 4px;
+    overflow: hidden;    
   }
 
-  .sidebar > div{
-    width: 100%;
+  .sidebar > img{
+    width: 90%;
+    margin: 5%;
   }
 
   .main{
