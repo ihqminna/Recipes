@@ -1,5 +1,6 @@
 body{
-  
+
+  margin: 0px;  
   font-family: "Courier New";
   background-color: #ffbe0a;
 
@@ -7,6 +8,11 @@ body{
     font-size: 36px;
     color: #550b60;
     font-weight: 600;
+  }
+
+  header{
+    height:40px;
+    background-color: #ff841f;
   }
 
   .layout{
@@ -29,6 +35,6 @@ body{
 
   .main{
     width: 92%;
-    margin: 2% 5% 2% 5%;
+    margin: 8px 16px 8px 16px;
   }
 }
