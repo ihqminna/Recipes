@@ -15,5 +15,9 @@ def recipes():
 def resepti1():
     return "<h1>Resepti1</h1>"
 
+@app.route("/uusiresepti")
+def uusi_resepti():
+    return render_template("uusi_resepti.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
