@@ -26,10 +26,18 @@ body{
     padding: 8px;
   }
 
-  .menu{
+  nav > ul{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    list-style-type: none;
+    padding: 0px 0px 0px 8px;
+  }
+
+  nav > ul > li{
+    font-weight: bold;
+    padding: 8px 16px 8px 16px;
+    color: #081F05;
   }
 
   .layout{
