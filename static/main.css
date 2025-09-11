@@ -9,4 +9,26 @@ body{
     font-weight: 600;
   }
 
+  .layout{
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+  }
+
+  .sidebar{ 
+    display: flex;
+    flex-direction: column;
+    width: 8%;
+    height: 100vh;
+    margin: 2%;
+  }
+
+  .sidebar > div{
+    width: 100%;
+  }
+
+  .main{
+    width: 92%;
+    margin: 2% 5% 2% 5%;
+  }
 }
