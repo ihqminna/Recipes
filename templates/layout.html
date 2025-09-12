@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Reseptikirjasto</title>
+  <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" href="/static/main.css">
   <link rel="icon" type="image/x-icon" href="/static/eggplant.png">
   <meta property="og:type" content="website" />
@@ -32,10 +32,8 @@
       {% endfor %}
     </div>
     <div class="main"> 
-      <h1>Tervetuloa reseptikirjastoon</h1>
-      <p>
-        Sivulatausten määrä: {{ count }}
-      </p>
+      <h1>Sivun otsikko</h1>
+      {% block content %}{% endblock %}
     </div>
   </div>
 </body>

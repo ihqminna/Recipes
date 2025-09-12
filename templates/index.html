@@ -1,43 +1,7 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Reseptikirjasto</title>
-  <link rel="stylesheet" href="/static/main.css">
-  <link rel="icon" type="image/x-icon" href="/static/eggplant.png">
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="/static/eggplant.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
+{% block title %}Reseptikirjasto{% endblock %}
 
-<body>
-  <header>
-    <div class="to_frontpage">
-      <a href="/" width="100%">
-        <img src="/static/eggplant.png" alt="Munakoiso" width="100%">
-      </a>
-    </div>
-    <nav>
-      <ul>
-        <li><a>Kaikki reseptit</a></li>        
-        <li><a>Omat reseptit</a></li>
-        <li><a>Uusi reseptit</a></li>
-      </ul>
-    </nav>
-  </header>
-  <div class="layout">
-    <div class="sidebar">
-      {% for i in range(30) %}
-        <img src="/static/eggplant.png" alt="Munakoiso">
-      {% endfor %}
-    </div>
-    <div class="main"> 
-      <h1>Tervetuloa reseptikirjastoon</h1>
-      <p>
-        Sivulatausten määrä: {{ count }}
-      </p>
-    </div>
-  </div>
-</body>
-
-</html>
+{% block content %}
+<p>Sivulatausten määrä: {{ count }}</p>
+{% endblock %}
