@@ -1,11 +1,18 @@
 from flask import Flask
 from flask import render_template
+import sqlite3
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    db = sqlite3.connect("database.db")
+    db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
+    db.commit()
+    result = db.execute("SELECT COUNT(*) FROM visits").fetchone()
+    count = result[0]
+    db.close()
+    return render_template("index.html", count=count)
 
 @app.route("/reseptit")
 def recipes():
