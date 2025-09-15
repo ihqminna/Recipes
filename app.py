@@ -7,9 +7,9 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
-    recipes = db.execute("SELECT name FROM recipes")
+    recipes = db.query("SELECT name FROM recipes",)
     recipes_count = len(recipes)
-    return render_template("index.html", recipes_count=count, recipes=recipes)
+    return render_template("index.html", count=recipes_count, recipes=recipes)
 
 @app.route("/omatreseptit")
 def recipes():
