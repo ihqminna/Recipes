@@ -3,9 +3,12 @@
 {% set title = "Uusi resepti" %}
 
 {% block content %}
-<form action="/result" method="post">
+<form action="/kiitos" method="post">
   <p>Reseptin nimi:
-    <input type="text" name="message" />
+    <input type="text" name="name" />
+  </p>
+  <p>Ohje:
+    <input type="text" name="instructions" />
   </p>
   <input type="submit" value="Lisää resepti" />
 </form>
