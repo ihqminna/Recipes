@@ -1,18 +1,15 @@
 from flask import Flask
 from flask import render_template, request, redirect
-import sqlite3
+import db
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    db = sqlite3.connect("database.db")
     db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
-    db.commit()
-    recipes = db.execute("SELECT name, instructions FROM recipes").fetchall()
-    db.close()
-    count = len(recipes)
-    return render_template("index.html", recipes_no=count, recipes=recipes)
+    recipes = db.execute("SELECT name FROM recipes")
+    recipes_count = len(recipes)
+    return render_template("index.html", recipes_count=count, recipes=recipes)
 
 @app.route("/omatreseptit")
 def recipes():
@@ -31,12 +28,10 @@ def kiitos():
     return render_template("kiitos.html")
 
 @app.route("/uusi", methods=["POST"])
+def uusi():
     name = request.form["name"]
     instructions = request.form["instructions"]
-    db = sqlite3.connect("database.db")
     db.execute("INSERT INTO recipes (name, instructions) VALUES (?, ?)", [name, instructions])
-    db.commit()
-    db.close()
     return redirect("/kiitos")
 
 if __name__ == "__main__":
