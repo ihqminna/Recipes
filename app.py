@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, request
+from flask import render_template, request, redirect
 import sqlite3
 
 app = Flask(__name__)
@@ -26,15 +26,18 @@ def resepti1():
 def uusi_resepti():
     return render_template("uusi_resepti.html")
 
-@app.route("/kiitos", methods=["POST"])
+@app.route("/kiitos")
 def kiitos():
+    return render_template("kiitos.html")
+
+@app.route("/uusi", methods=["POST"])
     name = request.form["name"]
     instructions = request.form["instructions"]
     db = sqlite3.connect("database.db")
     db.execute("INSERT INTO recipes (name, instructions) VALUES (?, ?)", [name, instructions])
     db.commit()
     db.close()
-    return render_template("kiitos.html")
+    return redirect("/kiitos")
 
 if __name__ == "__main__":
     app.run(debug=True)
