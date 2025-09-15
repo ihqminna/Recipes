@@ -14,17 +14,21 @@ def index():
     db.close()
     return render_template("index.html", count=count)
 
-@app.route("/reseptit")
+@app.route("/omatreseptit")
 def recipes():
-    return "<h1>Reseptit</h1>"
+    return "<h1>Omat reseptisi</h1>"
 
-@app.route("/reseptit/resepti1")
+@app.route("/reseptit1")
 def resepti1():
     return "<h1>Resepti1</h1>"
 
 @app.route("/uusiresepti")
 def uusi_resepti():
     return render_template("uusi_resepti.html")
+
+@app.route("/kiitos")
+def kiitos():
+    return render_template("kiitos.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
