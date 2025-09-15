@@ -20,6 +20,8 @@ body{
     max-width: 100%;
   }
 
+  .recipe_list_item{}
+
   header{
     display: flex;
     flex-direction: row;

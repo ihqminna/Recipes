@@ -1,9 +1,14 @@
 {% extends "layout.html" %}
 
-{% set title = "Reseptikirjasto" %}
+{% set title = "Reseptit" %}
 
 {% block content %}
-<p>Sivulatausten määrä: {{ count }}</p>
-<h2>Reseptit</h2>
-<p>{{ recipes }}</p>
+<p>{{ recipes_no }}</p>
+{% for recipe in recipes %}
+<div class="recipe_list_item">
+  <h2>
+    {{ recipe[0] }}
+  </h2>
+</div>
+{% endfor %}
 {% endblock %}

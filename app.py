@@ -9,12 +9,10 @@ def index():
     db = sqlite3.connect("database.db")
     db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
     db.commit()
-    result = db.execute("SELECT COUNT(*) FROM visits").fetchone()
-    recipes = db.execute("SELECT COUNT(*) FROM recipes").fetchone()
-    count = result[0]
-    recipes = recipes[0]
+    recipes = db.execute("SELECT name, instructions FROM recipes").fetchall()
     db.close()
-    return render_template("index.html", count=count, recipes=recipes)
+    count = len(recipes)
+    return render_template("index.html", recipes_no=count, recipes=recipes)
 
 @app.route("/omatreseptit")
 def recipes():
