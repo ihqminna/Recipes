@@ -10,6 +10,12 @@ body{
     font-weight: 600;
   }
 
+  a{
+    font-weight: 800;
+    color: #081F05;
+    text-decoration: none;
+  }
+
   img{
     max-width: 100%;
   }
