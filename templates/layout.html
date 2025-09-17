@@ -24,6 +24,8 @@
         <li><a href="/uusiresepti">Uusi resepti</a></li>
         {% if session.user %}
         <li><a href="/kirjaaulos">Kirjaudu ulos</a></li>
+        {% else %}
+        <li><a href="/kirjaudu">Kirjaudu sisään</a></li>
         {% endif %}
       </ul>
     </nav>
