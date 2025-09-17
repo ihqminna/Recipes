@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% set title = "Omat reseptisi" %}
+
+{% block content %}
+<p>{{ recipes_no }}</p>
+{% for recipe in recipes %}
+<div class="recipe_list_item">
+  <h2>
+    {{ recipe.name }}
+  </h2>
+</div>
+{% endfor %}
+{% endblock %}

@@ -61,7 +61,7 @@ def uusikayttaja():
 
 @app.route("/omatreseptit")
 def recipes():
-    return "<h1>Omat reseptisi</h1>"
+    return render_template("omat_reseptit.html")
 
 @app.route("/reseptit1")
 def resepti1():

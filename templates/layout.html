@@ -20,7 +20,9 @@
     <nav>
       <ul>
         <li><a href="/">Kaikki reseptit</a></li>        
+        {% if session.user %}
         <li><a href="/omatreseptit">Omat reseptit</a></li>
+        {% endif %}
         <li><a href="/uusiresepti">Uusi resepti</a></li>
         {% if session.user %}
         <li><a href="/kirjaaulos">Kirjaudu ulos</a></li>
