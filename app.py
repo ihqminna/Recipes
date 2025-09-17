@@ -79,7 +79,15 @@ def kiitos():
 def uusi():
     name = request.form["name"]
     instructions = request.form["instructions"]
-    db.execute("INSERT INTO recipes (name, instructions) VALUES (?, ?)", [name, instructions])
+    if session:
+        username = session["user"]
+        print("User logged in ", username)
+        user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
+        print("Session's user id is ", user_id)
+        sql = "INSERT INTO recipes (name, instructions, user_id) VALUES (?, ?, ?)"
+        db.execute(sql, [name, instructions, user_id])
+    else:
+        db.execute("INSERT INTO recipes (name, instructions) VALUES (?, ?)", [name, instructions])
     return redirect("/kiitos")
 
 if __name__ == "__main__":
