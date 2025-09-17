@@ -4,11 +4,13 @@
 
 {% block content %}
 <p>{{ recipes_no }}</p>
-{% for recipe in recipes %}
-<div class="recipe_list_item">
-  <h2>
-    {{ recipe.name }}
-  </h2>
+<div class="recipe_list">
+  {% for recipe in recipes %}
+  <div class="recipe_list_item">
+    <h2>
+      {{ recipe.name }}
+    </h2>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}

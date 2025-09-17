@@ -61,7 +61,12 @@ def uusikayttaja():
 
 @app.route("/omatreseptit")
 def recipes():
-    return render_template("omat_reseptit.html")
+    username = session["user"]
+    user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
+    recipes = db.query("SELECT name FROM recipes WHERE user_id = ?", [user_id])
+    recipes_count = len(recipes)
+    return render_template("omat_reseptit.html", count=recipes_count, recipes=recipes)
+
 
 @app.route("/reseptit1")
 def resepti1():
@@ -81,9 +86,7 @@ def uusi():
     instructions = request.form["instructions"]
     if session:
         username = session["user"]
-        print("User logged in ", username)
         user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-        print("Session's user id is ", user_id)
         sql = "INSERT INTO recipes (name, instructions, user_id) VALUES (?, ?, ?)"
         db.execute(sql, [name, instructions, user_id])
     else:
@@ -92,3 +95,4 @@ def uusi():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
