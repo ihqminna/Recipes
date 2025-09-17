@@ -33,7 +33,7 @@ def login():
     else:
         return "Väärä käyttäjätunnus tai salasana"
 
-@app.route("/uloskirjautuminen")
+@app.route("/kirjaaulos")
 def logout():
     del session["user"]
     return redirect ("/")
