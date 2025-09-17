@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import render_template, request, redirect
+from werkzeug.security import generate_password_hash
 import db
 
 app = Flask(__name__)
@@ -10,6 +11,27 @@ def index():
     recipes = db.query("SELECT name FROM recipes",)
     recipes_count = len(recipes)
     return render_template("index.html", count=recipes_count, recipes=recipes)
+
+@app.route("/rekisteroidy")
+def rekisteroidy():
+    return render_template("rekisteroidy.html")
+
+@app.route("/uusikayttaja", methods=["POST"])
+def uusikayttaja():
+    username = request.form["username"]
+    password1 = request.form["password1"]
+    password2 = request.form["password2"]
+    if password1 != password2:
+        return "Salasanat eivät täsmää"
+    password_hash = generate_password_hash(password1)
+
+    try:
+        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+        db.execute(sql, [username, password_hash])
+    except sqlite3.IntegrityError:
+        return "Käyttäjätunnus on jo varattu, käytä toista käyttäjätunnusta"
+
+    return "Käyttäjätunnus on luotu"
 
 @app.route("/omatreseptit")
 def recipes():
