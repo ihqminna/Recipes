@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import render_template, request, redirect
 from werkzeug.security import generate_password_hash
+from flask import session
+import config
 import db
 
 app = Flask(__name__)
