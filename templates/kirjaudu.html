@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% set title = "Kirjaudu sisään" %}
+
+{% block content %}
+<form action="/kirjaasisaan" method="post">
+  <p>Käyttäjänimi
+    <input type="text" name="username" />
+  </p>
+  <p>Salasana
+    <input type="text" name="password" />
+  </p>
+  <input type="submit" value="Kirjaudu sisään" />
+</form>
+{% endblock %}

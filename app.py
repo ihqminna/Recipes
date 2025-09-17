@@ -1,11 +1,12 @@
 from flask import Flask
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session
 from werkzeug.security import generate_password_hash
-from flask import session
+from werkzeug.security import check_password_hash
 import config
 import db
 
 app = Flask(__name__)
+app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
@@ -13,6 +14,29 @@ def index():
     recipes = db.query("SELECT name FROM recipes",)
     recipes_count = len(recipes)
     return render_template("index.html", count=recipes_count, recipes=recipes)
+
+@app.route("/kirjaudu")
+def kirjaudu():
+    return render_template("kirjaudu.html")
+
+@app.route("/kirjaasisaan", methods=["POST"])
+def login():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    sql = "SELECT password_hash FROM users WHERE username = ?"
+    password_hash = db.query(sql, [username])[0][0]
+
+    if check_password_hash(password_hash, password):
+        session["user"] = username
+        return redirect("/omatreseptit")
+    else:
+        return "Väärä käyttäjätunnus tai salasana"
+
+@app.route("/uloskirjautuminen")
+def logout():
+    del session["user"]
+    return redirect ("/")
 
 @app.route("/rekisteroidy")
 def rekisteroidy():
