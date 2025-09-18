@@ -1,0 +1,48 @@
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    username TEXT UNIQUE,
+    password_hash TEXT
+);
+
+CREATE TABLE recipes (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    instructions TEXT,
+    user_id INTEGER REFERENCES users
+);
+
+CREATE TABLE visits (
+    id INTEGER PRIMARY KEY,
+    visited_at TEXT,
+    user_id INTEGER REFERENCES users
+);
+
+CREATE TABLE tags (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+);
+
+CREATE TABLE recipe_tag (
+    id INTEGER PRIMARY KEY,
+    recipe_id INTEGER REFERENCES recipes,
+    tag_id INTEGER REFERENCES tags
+);
+
+CREATE TABLE images (
+    id INTEGER PRIMARY KEY,
+    image BLOB,
+    name TEXT,
+    recipe_id INTEGER REFERENCES recipes
+);
+
+CREATE TABLE ingredients (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+);
+
+CREATE TABLE recipe_ingredient (
+    id INTEGER PRIMARY KEY,
+    ingredient_id INTEGER REFERENCES ingredients,
+    recipe_id INTEGER REFERENCES recipes,
+    amount TEXT
+);
