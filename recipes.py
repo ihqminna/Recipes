@@ -8,6 +8,11 @@ def recipe_name_free(name):
     else:
         return True
 
+def get_recipe(slug):
+    sql = "SELECT * FROM recipes WHERE slug=?"
+    recipe = db.query(sql, [slug])
+    return recipe
+
 def create_slug(name):
     slug = ""
     for i in name:

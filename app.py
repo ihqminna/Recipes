@@ -12,7 +12,7 @@ app.secret_key = config.secret_key
 @app.route("/")
 def index():
     db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
-    recipes = db.query("SELECT name FROM recipes",)
+    recipes = db.query("SELECT * FROM recipes",)
     recipes_count = len(recipes)
     return render_template("index.html", count=recipes_count, recipes=recipes)
 
@@ -73,8 +73,6 @@ def show_recipe(slug):
     recipe = recipes.get_recipe(slug)
     if not recipe:
         abort(404)
-    name = recipe.name
-    description = recipe.description
     return render_template("show_recipe.html", recipe=recipe)
 
 @app.route("/uusiresepti")
