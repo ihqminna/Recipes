@@ -1,5 +1,7 @@
 # Reseptikirjasto
 
+**Hallinnoi reseptejäsi helposti ja inspiroidu muiden resepteistä Reseptikirjasto-sovelluksessa!**
+
 ## Sovelluksen toiminnot
 
 * Käyttäjä pystyy luomaan tunnukseen, kirjautumaan sisään sovellukseen ja kirjautumaan ulos.
