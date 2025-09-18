@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 import config
 import db
+import recipes
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -60,13 +61,12 @@ def uusikayttaja():
     return "Käyttäjätunnus on luotu"
 
 @app.route("/omatreseptit")
-def recipes():
+def own_recipes():
     username = session["user"]
     user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
     recipes = db.query("SELECT name FROM recipes WHERE user_id = ?", [user_id])
     recipes_count = len(recipes)
     return render_template("omat_reseptit.html", count=recipes_count, recipes=recipes)
-
 
 @app.route("/reseptit1")
 def resepti1():
@@ -84,14 +84,19 @@ def kiitos():
 def uusi():
     name = request.form["name"]
     instructions = request.form["instructions"]
-    if session:
-        username = session["user"]
-        user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-        sql = "INSERT INTO recipes (name, instructions, user_id) VALUES (?, ?, ?)"
-        db.execute(sql, [name, instructions, user_id])
+    if len(name) > 0 and recipes.recipe_name_free(name):
+        for i in name:
+            slug = recipes.create_slug(name)
+            if session:
+                username = session["user"]
+                user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
+                sql = "INSERT INTO recipes (name, instructions, user_id, slug) VALUES (?, ?, ?, ?)"
+                db.execute(sql, [name, instructions, user_id, slug])
+            else:
+                db.execute("INSERT INTO recipes (name, instructions, slug) VALUES (?, ?, ?)", [name, instructions, slug])
+        return redirect("/kiitos")
     else:
-        db.execute("INSERT INTO recipes (name, instructions) VALUES (?, ?)", [name, instructions])
-    return redirect("/kiitos")
+        return "Lisää reseptille nimi"
 
 if __name__ == "__main__":
     app.run(debug=True)
