@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, abort
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 import config
@@ -68,9 +68,14 @@ def own_recipes():
     recipes_count = len(recipes)
     return render_template("omat_reseptit.html", count=recipes_count, recipes=recipes)
 
-@app.route("/reseptit1")
-def resepti1():
-    return "<h1>Resepti1</h1>"
+@app.route("/resepti/<slug>")
+def show_recipe(slug):
+    recipe = recipes.get_recipe(slug)
+    if not recipe:
+        abort(404)
+    name = recipe.name
+    description = recipe.description
+    return render_template("show_recipe.html", recipe=recipe)
 
 @app.route("/uusiresepti")
 def uusi_resepti():
