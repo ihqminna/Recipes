@@ -70,7 +70,7 @@ def own_recipes():
 
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
-    recipe = recipes.get_recipe(slug)
+    recipe = recipes.get_recipe(slug)[0]
     if not recipe:
         abort(404)
     return render_template("show_recipe.html", recipe=recipe)
