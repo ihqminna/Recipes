@@ -26,6 +26,10 @@ def add_recipe_by_user(name, instructions, slug, username):
 def add_recipe(name, instructions, slug):
     db.execute("INSERT INTO recipes (name, instructions, slug) VALUES (?, ?, ?)", [name, instructions, slug])
 
+def remove_recipe(recipe_id):
+    db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
+    #Delete also from other tables where reference to recipe
+
 def create_slug(name):
     slug = ""
     for i in name:

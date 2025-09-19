@@ -102,8 +102,23 @@ def new():
     else:
         return "Lisää reseptille nimi"
     
-#@app.route("/poista/<slug>", methods=["GET", "POST"])
-#def remove_recipe(slug):
+@app.route("/poista/<slug>", methods=["GET", "POST"])
+def remove_recipe(slug):
+    recipe = recipes.get_recipe_by_slug(slug)[0]
+    if not recipe:
+        abort(404)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
+    
+    if request.method == "GET":
+        return render_template("remove_recipe.html", recipe=recipe)
+
+    if request.method == "POST":
+        if "remove" in request.form:
+            recipes.remove_recipe(recipe["id"])
+            return redirect("/")
+        else:
+            return redirect("/resepti/" + slug)
 
 if __name__ == "__main__":
     app.run(debug=True)
