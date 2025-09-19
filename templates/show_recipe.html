@@ -4,8 +4,9 @@
 
 {% block content %}
 <h1>{{ recipe.name }}</h1>
-<p>{{ recipe.description }}</p>
+<p>{{ recipe.instructions }}</p>
 {% if session.user_id == recipe.user_id %}
-  <p>Oma resepti</p>
+<a class="secondary_button" href="/muokkaa/{{ recipe.slug }}">Muokkaa reseptiä</a>
+<a class="secondary_button" href="/poista/{{ recipe.slug }}">Poista resepti</a>
 {% endif %}
 {% endblock %}
