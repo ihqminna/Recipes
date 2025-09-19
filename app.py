@@ -130,6 +130,14 @@ def edit_recipe(slug):
     
     return render_template("edit_recipe.html", recipe=recipe)
 
+@app.route("/omatreseptit/haku", methods=["GET"])
+def search_own():
+    query = request.args.get("query")
+    print(query)
+    results = recipes.search(query) if query else []
+    print(results)
+    return render_template("own_recipes.html", query=query, results=results)
+
 @app.route("/haku", methods=["GET"])
 def search():
     query = request.args.get("query")
