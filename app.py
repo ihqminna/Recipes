@@ -16,11 +16,11 @@ def index():
     return render_template("index.html", count=recipes_count, recipes=all_recipes)
 
 @app.route("/kirjaudu")
-def kirjaudu():
-    return render_template("kirjaudu.html")
+def login():
+    return render_template("login.html")
 
 @app.route("/kirjaasisaan", methods=["POST"])
-def login():
+def in_logger():
     username = request.form["username"]
     password = request.form["password"]
 
@@ -39,11 +39,11 @@ def logout():
     return redirect ("/")
 
 @app.route("/rekisteroidy")
-def rekisteroidy():
-    return render_template("rekisteroidy.html")
+def register():
+    return render_template("register.html")
 
 @app.route("/uusikayttaja", methods=["POST"])
-def uusikayttaja():
+def new_user():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
@@ -65,7 +65,7 @@ def own_recipes():
     user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
     own_recipes = recipes.get_recipes_by_user(user_id)
     recipes_count = len(own_recipes)
-    return render_template("omat_reseptit.html", count=recipes_count, recipes=own_recipes)
+    return render_template("own_recipes.html", count=recipes_count, recipes=own_recipes)
 
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
@@ -75,15 +75,15 @@ def show_recipe(slug):
     return render_template("show_recipe.html", recipe=recipe)
 
 @app.route("/uusiresepti")
-def uusi_resepti():
-    return render_template("uusi_resepti.html")
+def new_recipe():
+    return render_template("new_recipe.html")
 
 @app.route("/kiitos")
-def kiitos():
-    return render_template("kiitos.html")
+def thank_you():
+    return render_template("thank_you.html")
 
 @app.route("/uusi", methods=["POST"])
-def uusi():
+def new():
     name = request.form["name"]
     instructions = request.form["instructions"]
     if len(name) > 0:
