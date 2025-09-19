@@ -26,13 +26,6 @@ def add_recipe_by_user(name, instructions, slug, username):
 def add_recipe(name, instructions, slug):
     db.execute("INSERT INTO recipes (name, instructions, slug) VALUES (?, ?, ?)", [name, instructions, slug])
 
-def current_users_recipe(recipe_id, user_id):
-    recipe_by = db.query("SELECT user_id FROM recipes WHERE id=?", [recipe_id])[0][0]
-    if recipe_by == user_id:
-        return True
-    else:
-        return False
-
 def create_slug(name):
     slug = ""
     for i in name:

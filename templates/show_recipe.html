@@ -5,5 +5,7 @@
 {% block content %}
 <h1>{{ recipe.name }}</h1>
 <p>{{ recipe.description }}</p>
-<p>{{ own_recipe }}</p>
+{% if session.user_id == recipe.user_id %}
+  <p>Oma resepti</p>
+{% endif %}
 {% endblock %}

@@ -24,11 +24,13 @@ def in_logger():
     username = request.form["username"]
     password = request.form["password"]
 
-    sql = "SELECT password_hash FROM users WHERE username = ?"
-    password_hash = db.query(sql, [username])[0][0]
+    sql = "SELECT * FROM users WHERE username = ?"
+    user = db.query(sql, [username])[0]
+    password_hash = user["password_hash"]
 
     if check_password_hash(password_hash, password):
         session["user"] = username
+        session["user_id"] = user["id"]
         return redirect("/omatreseptit")
     else:
         return "Väärä käyttäjätunnus tai salasana"
@@ -72,14 +74,7 @@ def show_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
     if not recipe:
         abort(404)
-    if session:
-        username = session["user"]
-        user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-    else:
-        user_id = 0
-    print(recipe)
-    own_recipe = recipes.current_users_recipe(recipe[0], user_id)
-    return render_template("show_recipe.html", recipe=recipe, own_recipe=own_recipe)
+    return render_template("show_recipe.html", recipe=recipe)
 
 @app.route("/uusiresepti")
 def new_recipe():
