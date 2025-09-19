@@ -4,7 +4,6 @@ body{
   font-family: "Courier New";
   background-color: #ffbe0a;
   background-image: url(eggplant.png);
-  /*background-image: cross-fade(url(eggplant.png), url(var(--transparentImg)), 20%);*/
   background-blend-mode: soft-light;
   background-position: 40px 69px;
 
