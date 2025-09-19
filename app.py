@@ -72,7 +72,14 @@ def show_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
     if not recipe:
         abort(404)
-    return render_template("show_recipe.html", recipe=recipe)
+    if session:
+        username = session["user"]
+        user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
+    else:
+        user_id = 0
+    print(recipe)
+    own_recipe = recipes.current_users_recipe(recipe[0], user_id)
+    return render_template("show_recipe.html", recipe=recipe, own_recipe=own_recipe)
 
 @app.route("/uusiresepti")
 def new_recipe():
@@ -99,6 +106,9 @@ def new():
             return "Reseptin nimi on jo käytössä"
     else:
         return "Lisää reseptille nimi"
+    
+#@app.route("/poista/<slug>", methods=["GET", "POST"])
+#def remove_recipe(slug):
 
 if __name__ == "__main__":
     app.run(debug=True)
