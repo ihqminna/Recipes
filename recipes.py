@@ -8,6 +8,10 @@ def recipe_name_free(name):
     else:
         return True
 
+def get_recipe_by_id(recipe_id):
+    sql = "SELECT * FROM recipes WHERE id=?"
+    return db.query(sql, [recipe_id])
+
 def get_recipe_by_slug(slug):
     sql = "SELECT * FROM recipes WHERE slug=?"
     return db.query(sql, [slug])
@@ -29,6 +33,10 @@ def add_recipe(name, instructions, slug):
 def remove_recipe(recipe_id):
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
     #Delete also from other tables where reference to recipe
+
+def update_recipe(name, instructions, recipe_id, slug):
+    sql = "UPDATE recipes SET name = ?, instructions = ?, slug = ? WHERE id = ?"
+    db.execute(sql, [name, instructions, slug, recipe_id])
 
 def create_slug(name):
     slug = ""

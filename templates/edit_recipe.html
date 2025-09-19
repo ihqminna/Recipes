@@ -4,13 +4,15 @@
 
 {% block content %}
 <h1>Muokkaa reseptiä {{ recipe.name }}</h1>
-<form action="/muokkaa" method="post">
+<form action="/tallenna" method="post">
   <p>Reseptin nimi:
     <input type="text" name="name" value="{{ recipe.name }}" />
   </p>
   <p>Ohje:
     <input type="text" name="instructions" value="{{ recipe.instructions }}" />
   </p>
+  <input type="hidden" name="recipe_id" value="{{ recipe.id }}" />
+  <input type="hidden" name="old_name" value="{{ recipe.name }}" />
   <input type="submit" value="Tallenna resepti" />
 </form>
 <p>

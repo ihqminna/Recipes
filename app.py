@@ -130,5 +130,28 @@ def edit_recipe(slug):
     
     return render_template("edit_recipe.html", recipe=recipe)
 
+@app.route("/tallenna", methods=["POST"])
+def save_recipe():
+    recipe_id = request.form["recipe_id"]
+    recipe = recipes.get_recipe_by_id(recipe_id)[0]
+    if not recipe:
+        abort(404)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
+
+    name = request.form["name"]
+    old_name = request.form["old_name"]
+    instructions = request.form["instructions"]
+    if len(name) > 0:
+        if name != old_name and not recipes.recipe_name_free(name):
+            return "Reseptin nimi on jo käytössä"
+        else:    
+            slug = recipes.create_slug(name)
+            recipes.update_recipe(name, instructions, recipe_id, slug)
+            return redirect("/resepti/" + slug)
+
+    else:
+        return "Lisää reseptille nimi"
+
 if __name__ == "__main__":
     app.run(debug=True)
