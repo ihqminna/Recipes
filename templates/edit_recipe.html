@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Muokkaa reseptiä{% endblock %}
+
+{% block content %}
+<h1>Muokkaa reseptiä {{ recipe.name }}</h1>
+<form action="/muokkaa" method="post">
+  <p>Reseptin nimi:
+    <input type="text" name="name" value="{{ recipe.name }}" />
+  </p>
+  <p>Ohje:
+    <input type="text" name="instructions" value="{{ recipe.instructions }}" />
+  </p>
+  <input type="submit" value="Tallenna resepti" />
+</form>
+<p>
+  <a class="secondary_button" href="/resepti/{{ recipe.slug }}">Palaa reseptiin</a>
+</p>
+{% endblock %}

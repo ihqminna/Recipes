@@ -119,6 +119,16 @@ def remove_recipe(slug):
             return redirect("/")
         else:
             return redirect("/resepti/" + slug)
+        
+@app.route("/muokkaa/<slug>")
+def edit_recipe(slug):
+    recipe = recipes.get_recipe_by_slug(slug)[0]
+    if not recipe:
+        abort(404)
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
+    
+    return render_template("edit_recipe.html", recipe=recipe)
 
 if __name__ == "__main__":
     app.run(debug=True)
