@@ -8,7 +8,8 @@ CREATE TABLE recipes (
     id INTEGER PRIMARY KEY,
     name TEXT,
     instructions TEXT,
-    user_id INTEGER REFERENCES users
+    user_id INTEGER REFERENCES users,
+    slug TEXT
 );
 
 CREATE TABLE visits (

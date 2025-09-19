@@ -11,10 +11,9 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
-    recipes = db.query("SELECT * FROM recipes",)
-    recipes_count = len(recipes)
-    return render_template("index.html", count=recipes_count, recipes=recipes)
+    all_recipes = recipes.get_recipes()
+    recipes_count = len(all_recipes)
+    return render_template("index.html", count=recipes_count, recipes=all_recipes)
 
 @app.route("/kirjaudu")
 def kirjaudu():
@@ -64,13 +63,13 @@ def uusikayttaja():
 def own_recipes():
     username = session["user"]
     user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-    recipes = db.query("SELECT name FROM recipes WHERE user_id = ?", [user_id])
-    recipes_count = len(recipes)
-    return render_template("omat_reseptit.html", count=recipes_count, recipes=recipes)
+    own_recipes = recipes.get_recipes_by_user(user_id)
+    recipes_count = len(own_recipes)
+    return render_template("omat_reseptit.html", count=recipes_count, recipes=own_recipes)
 
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
-    recipe = recipes.get_recipe(slug)[0]
+    recipe = recipes.get_recipe_by_slug(slug)[0]
     if not recipe:
         abort(404)
     return render_template("show_recipe.html", recipe=recipe)
@@ -87,20 +86,20 @@ def kiitos():
 def uusi():
     name = request.form["name"]
     instructions = request.form["instructions"]
-    if len(name) > 0 and recipes.recipe_name_free(name):
-        for i in name:
-            slug = recipes.create_slug(name)
+    if len(name) > 0:
+        if recipes.recipe_name_free(name):
+            for i in name:
+                slug = recipes.create_slug(name)
             if session:
                 username = session["user"]
-                user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-                sql = "INSERT INTO recipes (name, instructions, user_id, slug) VALUES (?, ?, ?, ?)"
-                db.execute(sql, [name, instructions, user_id, slug])
+                recipes.add_recipe_by_user(name, instructions, slug, username)
             else:
-                db.execute("INSERT INTO recipes (name, instructions, slug) VALUES (?, ?, ?)", [name, instructions, slug])
-        return redirect("/kiitos")
+                recipes.add_recipe(name, instructions, slug)
+            return redirect("/kiitos")
+        else:
+            return "Reseptin nimi on jo käytössä"
     else:
         return "Lisää reseptille nimi"
 
 if __name__ == "__main__":
     app.run(debug=True)
-
