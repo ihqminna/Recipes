@@ -88,8 +88,7 @@ def uusi():
     instructions = request.form["instructions"]
     if len(name) > 0:
         if recipes.recipe_name_free(name):
-            for i in name:
-                slug = recipes.create_slug(name)
+            slug = recipes.create_slug(name)
             if session:
                 username = session["user"]
                 recipes.add_recipe_by_user(name, instructions, slug, username)
