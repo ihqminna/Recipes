@@ -7,6 +7,7 @@
 <div class="recipe_list">
   {% for recipe in recipes %}
   <div class="recipe_list_item">
+    <a href="/resepti/{{ recipe.slug }}"></a>
     <h2>
       {{ recipe.name }}
     </h2>
