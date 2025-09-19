@@ -130,6 +130,14 @@ def edit_recipe(slug):
     
     return render_template("edit_recipe.html", recipe=recipe)
 
+@app.route("/haku", methods=["GET"])
+def search():
+    query = request.args.get("query")
+    print(query)
+    results = recipes.search(query) if query else []
+    print(results)
+    return render_template("index.html", query=query, results=results)
+
 @app.route("/tallenna", methods=["POST"])
 def save_recipe():
     recipe_id = request.form["recipe_id"]
@@ -149,7 +157,6 @@ def save_recipe():
             slug = recipes.create_slug(name)
             recipes.update_recipe(name, instructions, recipe_id, slug)
             return redirect("/resepti/" + slug)
-
     else:
         return "Lisää reseptille nimi"
 

@@ -38,6 +38,11 @@ def update_recipe(name, instructions, recipe_id, slug):
     sql = "UPDATE recipes SET name = ?, instructions = ?, slug = ? WHERE id = ?"
     db.execute(sql, [name, instructions, slug, recipe_id])
 
+def search(query):
+    sql = "SELECT * FROM recipes WHERE instructions LIKE ? OR name LIKE ?"
+    #Add more possibilities to search
+    return db.query(sql, ["%" + query + "%", "%" + query + "%"])
+
 def create_slug(name):
     slug = ""
     for i in name:
