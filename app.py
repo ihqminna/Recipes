@@ -34,8 +34,9 @@ def in_logger():
         session["user_id"] = user["id"]
         return redirect("/omatreseptit")
     else:
-        return "Väärä käyttäjätunnus tai salasana"
-
+        message =  "Väärä käyttäjätunnus tai salasana"
+        return render_template("login.html", message=message)
+    
 @app.route("/kirjaaulos")
 def logout():
     del session["user"]

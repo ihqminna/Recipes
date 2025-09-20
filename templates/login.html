@@ -10,6 +10,11 @@
   <p>Salasana
     <input type="text" name="password" />
   </p>
+  <p>
+    {% if message %}
+    <strong>{{ message }}</strong>
+    {% endif %}
+  </p>
   <input type="submit" value="Kirjaudu sisään" />
 </form>
 <h2>Etkö ole vielä käyttäjä?</h2>
