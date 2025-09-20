@@ -73,6 +73,10 @@ def own_recipes():
     recipes_count = len(own_recipes)
     return render_template("own_recipes.html", count=recipes_count, recipes=own_recipes)
 
+@app.route("/avainsanat")
+def keywords():
+    return render_template("keywords.html")
+
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
