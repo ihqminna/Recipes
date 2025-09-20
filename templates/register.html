@@ -13,6 +13,9 @@
   <p>Salasana uudelleen
     <input type="text" name="password2" />
   </p>
+  {% if message %}
+  <p><strong>{{ message }}</strong></p>
+  {% endif %}
   <input type="submit" value="Lisää käyttäjä" />
 </form>
 {% endblock %}

@@ -1,3 +1,4 @@
+import sqlite3
 from flask import Flask
 from flask import render_template, request, redirect, session, abort
 from werkzeug.security import generate_password_hash
@@ -50,16 +51,18 @@ def new_user():
     password1 = request.form["password1"]
     password2 = request.form["password2"]
     if password1 != password2:
-        return "Salasanat eivät täsmää"
+        message = "Salasanat eivät täsmää"
+        return render_template("register.html", message=message)
     password_hash = generate_password_hash(password1)
 
     try:
         sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
         db.execute(sql, [username, password_hash])
     except sqlite3.IntegrityError:
-        return "Käyttäjätunnus on jo varattu, käytä toista käyttäjätunnusta"
+        message = "Käyttäjätunnus on varattu, käytä toista käyttäjätunnusta"
+        return render_template("register.html", message=message)
 
-    return "Käyttäjätunnus on luotu"
+    return redirect("/kirjaudu")
 
 @app.route("/omatreseptit")
 def own_recipes():
