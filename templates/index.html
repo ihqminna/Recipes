@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "recipes.html" %}
 
 {% set title = "Reseptit" %}
 
@@ -14,28 +14,5 @@
   </p>
   <input type="submit" value="Hae reseptejä" />
 </form>
-
-<div class="recipe_list">
-  {% if query %}
-  {% for result in results %}
-  <div class="recipe_list_item">
-    <a href="/resepti/{{ result.slug }}">
-      <h2>
-        {{ result.name }}
-      </h2>
-    </a>
-  </div>
-  {% endfor %}
-  {% else %}
-  {% for recipe in recipes %}
-  <div class="recipe_list_item">
-    <a href="/resepti/{{ recipe.slug }}">
-      <h2>
-        {{ recipe.name }}
-      </h2>
-    </a>
-  </div>
-  {% endfor %}
-  {% endif %}
-</div>
+{{ super() }}
 {% endblock %}
