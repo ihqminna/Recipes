@@ -6,6 +6,11 @@
   {% for result in results %}
   <div class="recipe_list_item">
     <a href="/resepti/{{ result.slug }}">
+      {% if result.image %}
+      <img >
+      {% else %}
+      <img src="/static/default.jpg">
+      {% endif %}
       <h2>
         {{ result.name }}
       </h2>
@@ -16,6 +21,11 @@
   {% for recipe in recipes %}
   <div class="recipe_list_item">
     <a href="/resepti/{{ recipe.slug }}">
+      {% if recipe.image %}
+      <img >
+      {% else %}
+      <img src="/static/default.jpg">
+      {% endif %}
       <h2>
         {{ recipe.name }}
       </h2>
