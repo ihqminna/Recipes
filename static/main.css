@@ -36,6 +36,7 @@ body{
 
   .recipe_list_item{
     margin: 8px;
+    max-width: 400px;
     border-radius: 12px;
     background-color: white;
   }
@@ -45,8 +46,9 @@ body{
   }
 
   .recipe_list_image{
-    max-width: 500px;
+    max-width: 100%;
     border-radius: 12px 12px 0px 0px;
+    filter: sepia(0) brightness(1);
   }
 
   header{
