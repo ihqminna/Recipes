@@ -7,9 +7,9 @@
   <div class="recipe_list_item">
     <a href="/resepti/{{ result.slug }}">
       {% if result.image %}
-      <img >
+      <img alt="result.name">
       {% else %}
-      <img src="/static/default.jpg">
+      <img src="/static/default.jpg" alt="Yleinen reseptikuva">
       {% endif %}
       <h2>
         {{ result.name }}
@@ -22,9 +22,9 @@
   <div class="recipe_list_item">
     <a href="/resepti/{{ recipe.slug }}">
       {% if recipe.image %}
-      <img >
+      <img alt="recipe.name">
       {% else %}
-      <img src="/static/default.jpg">
+      <img class="" src="/static/default.jpg" alt="Yleinen reseptikuva">
       {% endif %}
       <h2>
         {{ recipe.name }}
