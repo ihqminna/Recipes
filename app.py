@@ -1,6 +1,8 @@
 import sqlite3
+import os
 from flask import Flask
-from flask import render_template, request, redirect, session, abort
+from flask import render_template, request, redirect, session, abort, url_for
+from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 import config
@@ -96,19 +98,29 @@ def thank_you():
 def new():
     name = request.form["name"]
     instructions = request.form["instructions"]
-    if len(name) > 0:
-        if recipes.recipe_name_free(name):
-            slug = recipes.create_slug(name)
-            if session:
-                username = session["user"]
-                recipes.add_recipe_by_user(name, instructions, slug, username)
-            else:
-                recipes.add_recipe(name, instructions, slug)
-            return redirect("/kiitos")
-        else:
-            return "Reseptin nimi on jo käytössä"
+    imagefile = request.files["image"]
+    if not len(name) > 0:
+        message = "Lisää reseptille nimi"
+        return render_template("new_recipe.html", message=message)
+    if not recipes.recipe_name_free(name):
+        message = "Reseptin nimi on jo käytössä"
+        return render_template("new_recipe.html", message=message)
+    slug = recipes.create_slug(name)
+    if imagefile:
+        UPLOAD_FOLDER = "images/"
+        app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+        filename = secure_filename(imagefile.filename)
+        image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        imagefile.save(image_path)
+        if not imagefile.filename.endswith(".jpg"):
+            message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
+            return render_template("new_recipe.html", message=message)
+    if session:
+        username = session["user"]
+        recipes.add_recipe_by_user(name, instructions, slug, username, image_path)
     else:
-        return "Lisää reseptille nimi"
+        recipes.add_recipe(name, instructions, slug, image_path)
+    return redirect("/kiitos")
     
 @app.route("/poista/<slug>", methods=["GET", "POST"])
 def remove_recipe(slug):

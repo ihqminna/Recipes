@@ -22,13 +22,13 @@ def get_recipes_by_user(user_id):
 def get_recipes():
     return db.query("SELECT * FROM recipes",)
 
-def add_recipe_by_user(name, instructions, slug, username):
+def add_recipe_by_user(name, instructions, slug, username, image_path):
     user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-    sql = "INSERT INTO recipes (name, instructions, user_id, slug) VALUES (?, ?, ?, ?)"
-    db.execute(sql, [name, instructions, user_id, slug])
+    sql = "INSERT INTO recipes (name, instructions, user_id, slug, image_path) VALUES (?, ?, ?, ?, ?)"
+    db.execute(sql, [name, instructions, user_id, slug, image_path])
 
-def add_recipe(name, instructions, slug):
-    db.execute("INSERT INTO recipes (name, instructions, slug) VALUES (?, ?, ?)", [name, instructions, slug])
+def add_recipe(name, instructions, slug, image_path):
+    db.execute("INSERT INTO recipes (name, instructions, slug, image_path) VALUES (?, ?, ?, ?)", [name, instructions, slug, image_path])
 
 def remove_recipe(recipe_id):
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
