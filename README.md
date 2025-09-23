@@ -13,6 +13,7 @@
 
 ## Tulevat toiminnot
 
+* Reseptiin voi lisätä ainesosia.
 * Kuvan lisääminen reseptiin.
 * Reseptisivulla sitä voi kommentoida.
 * Käyttäjäsivu, jossa näkee oman aktiivisuutensa.
