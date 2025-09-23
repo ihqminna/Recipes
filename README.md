@@ -6,17 +6,17 @@
 
 * Käyttäjä pystyy luomaan tunnukseen, kirjautumaan sisään sovellukseen ja kirjautumaan ulos.
 * Käyttäjä näkee kaikki reseptit, sekä erikseen itse lisäämänsä reseptit.
+* Kullakin reseptillä on oma sivu.
+* Käyttäjä pystyy etsimään reseptejä hakusanalla.
+* Reseptin voi poistaa.
+* Reseptiä voi muokata.
 
-## Tulevat toiminnot (työn alla)
+## Tulevat toiminnot
 
 * Kuvan lisääminen reseptiin.
-* Kullakin reseptillä oma sivu
-* Reseptin sivulla sitä voi muokata
 * Reseptisivulla sitä voi kommentoida.
-* Reseptin voi poistaa.
 * Käyttäjäsivu, jossa näkee oman aktiivisuutensa.
-* Käyttäjä pystyy etsimään reseptejä hakusanalla.
-* Reseptiin voi lisätä avainsanoja (kuten "salaatti", "punajuuri", "vegaaninen").
+* Reseptiin voi lisätä avainsanoja (kuten "salaatti", "kevyt", "vegaaninen").
 * Avainsanat on listattu erikseen ja niiden perusteella voi selata reseptejä.
 * Sovellus on responsiivinen mobiilikäyttöön.
 
