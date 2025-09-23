@@ -9,7 +9,8 @@ CREATE TABLE recipes (
     name TEXT,
     instructions TEXT,
     user_id INTEGER REFERENCES users,
-    slug TEXT
+    slug TEXT,
+    image BLOB,
 );
 
 CREATE TABLE visits (
@@ -27,13 +28,6 @@ CREATE TABLE recipe_tag (
     id INTEGER PRIMARY KEY,
     recipe_id INTEGER REFERENCES recipes,
     tag_id INTEGER REFERENCES tags
-);
-
-CREATE TABLE images (
-    id INTEGER PRIMARY KEY,
-    image BLOB,
-    name TEXT,
-    recipe_id INTEGER REFERENCES recipes
 );
 
 CREATE TABLE ingredients (
