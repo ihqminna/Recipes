@@ -23,7 +23,31 @@ body{
     max-width: 100%;
   }
 
-  .recipe_list_item{}
+  .recipe_list{
+    display: flex;
+    flex-direction: row;
+    margin-top: 24px;
+  }
+
+  .recipe_list_item:hover{
+    box-shadow: darkorange 1px 6px 8px 4px;
+    margin-top: 4px;
+  }
+
+  .recipe_list_item{
+    margin: 8px;
+    border-radius: 12px;
+    background-color: white;
+  }
+
+  .recipe_list_name{
+    margin: 16px;
+  }
+
+  .recipe_list_image{
+    max-width: 500px;
+    border-radius: 12px 12px 0px 0px;
+  }
 
   header{
     display: flex;

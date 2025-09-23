@@ -7,11 +7,11 @@
   <div class="recipe_list_item">
     <a href="/resepti/{{ result.slug }}">
       {% if result.image %}
-      <img alt="result.name">
+      <img class="recipe_list_image" alt="result.name">
       {% else %}
-      <img src="/static/default.jpg" alt="Yleinen reseptikuva">
+      <img class="recipe_list_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
       {% endif %}
-      <h2>
+      <h2 class="recipe_list_name">
         {{ result.name }}
       </h2>
     </a>
@@ -22,11 +22,11 @@
   <div class="recipe_list_item">
     <a href="/resepti/{{ recipe.slug }}">
       {% if recipe.image %}
-      <img alt="recipe.name">
+      <img class="recipe_list_image" alt="recipe.name">
       {% else %}
-      <img class="" src="/static/default.jpg" alt="Yleinen reseptikuva">
+      <img class="recipe_list_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
       {% endif %}
-      <h2>
+      <h2 class="recipe_list_name">
         {{ recipe.name }}
       </h2>
     </a>
