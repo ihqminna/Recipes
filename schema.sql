@@ -10,7 +10,7 @@ CREATE TABLE recipes (
     instructions TEXT,
     user_id INTEGER REFERENCES users,
     slug TEXT,
-    image_path TEXT
+    image BLOB
 );
 
 CREATE TABLE visits (

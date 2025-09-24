@@ -1,4 +1,6 @@
 import db
+import base64
+from collections import namedtuple
 
 def recipe_name_free(name):
     sql = "SELECT name FROM recipes WHERE name=?"
@@ -17,18 +19,34 @@ def get_recipe_by_slug(slug):
     return db.query(sql, [slug])
 
 def get_recipes_by_user(user_id):
-    return db.query("SELECT * FROM recipes WHERE user_id=?", [user_id])
+    recipes = db.query("SELECT * FROM recipes WHERE user_id=?", [user_id])
+    return handle_images(recipes)
 
 def get_recipes():
-    return db.query("SELECT * FROM recipes",)
+    recipes = db.query("SELECT * FROM recipes",)
+    return handle_images(recipes)
 
-def add_recipe_by_user(name, instructions, slug, username, image_path):
+def handle_images(recipes):
+    recipes_with_image = []
+    for recipe in recipes:
+        recipe_with_image = {}
+        recipe_with_image["name"] = recipe["name"]
+        recipe_with_image["instructions"] = recipe["instructions"]
+        recipe_with_image["slug"] = recipe["slug"]
+        print(recipes_with_image)
+        if recipe["image"]:
+            recipe_with_image["image"] = base64.b64encode(recipe["image"]).decode("utf-8")
+        else: recipe_with_image["image"] = None
+        recipes_with_image.append(recipe_with_image)
+    return recipes_with_image
+
+def add_recipe_by_user(name, instructions, slug, username, image):
     user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-    sql = "INSERT INTO recipes (name, instructions, user_id, slug, image_path) VALUES (?, ?, ?, ?, ?)"
-    db.execute(sql, [name, instructions, user_id, slug, image_path])
+    sql = "INSERT INTO recipes (name, instructions, user_id, slug, image) VALUES (?, ?, ?, ?, ?)"
+    db.execute(sql, [name, instructions, user_id, slug, image])
 
-def add_recipe(name, instructions, slug, image_path):
-    db.execute("INSERT INTO recipes (name, instructions, slug, image_path) VALUES (?, ?, ?, ?)", [name, instructions, slug, image_path])
+def add_recipe(name, instructions, slug, image):
+    db.execute("INSERT INTO recipes (name, instructions, slug, image) VALUES (?, ?, ?, ?)", [name, instructions, slug, image])
 
 def remove_recipe(recipe_id):
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])

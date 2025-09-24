@@ -1,7 +1,6 @@
 import sqlite3
-import os
 from flask import Flask
-from flask import render_template, request, redirect, session, abort, url_for
+from flask import render_template, request, redirect, session, abort
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -107,19 +106,24 @@ def new():
         return render_template("new_recipe.html", message=message)
     slug = recipes.create_slug(name)
     if imagefile:
-        UPLOAD_FOLDER = "images/"
-        app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-        filename = secure_filename(imagefile.filename)
-        image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        imagefile.save(image_path)
-        if not imagefile.filename.endswith(".jpg"):
+        print(imagefile.filename)
+        if imagefile.filename == "":
+            message = "Lisää kuvatiedostolle nimi."
+            return render_template("new_recipe.html", message=message)
+        elif not imagefile.filename.endswith(".jpg"):
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
             return render_template("new_recipe.html", message=message)
+        #else: imagefile = secure_filename(imagefile.filename)
+        image = imagefile.read()
+        if len(image) > 100*1024:
+            message = "Liian suuri kuvatiedosto."
+            return render_template("new_recipe.html", message=message)            
+    else: image = None
     if session:
         username = session["user"]
-        recipes.add_recipe_by_user(name, instructions, slug, username, image_path)
+        recipes.add_recipe_by_user(name, instructions, slug, username, image)
     else:
-        recipes.add_recipe(name, instructions, slug, image_path)
+        recipes.add_recipe(name, instructions, slug, image)
     return redirect("/kiitos")
     
 @app.route("/poista/<slug>", methods=["GET", "POST"])

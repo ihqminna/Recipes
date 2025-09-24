@@ -6,8 +6,8 @@
   {% for result in results %}
   <div class="recipe_list_item">
     <a href="/resepti/{{ result.slug }}">
-      {% if result.image_path %}
-      <img src="{{ result.image_path }}" class="recipe_list_image" alt="result.name">
+      {% if result.image %}
+      <img src="data:image/jpeg;base64,{{ result['image'] }}" class="recipe_list_image" alt="result.name">
       {% else %}
       <img class="recipe_list_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
       {% endif %}
@@ -21,8 +21,8 @@
   {% for recipe in recipes %}
   <div class="recipe_list_item">
     <a href="/resepti/{{ recipe.slug }}">
-      {% if recipe.image_path %}
-      <img src="{{ recipe.image_path }}" class="recipe_list_image" alt="recipe.name">
+      {% if recipe.image %}
+      <img src="data:image/jpeg;base64,{{ recipe['image'] }}" class="recipe_list_image" alt="recipe.name">
       {% else %}
       <img class="recipe_list_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
       {% endif %}
