@@ -6,7 +6,7 @@
 <h1>Muokkaa reseptiä {{ recipe.name }}</h1>
 <form action="/tallenna" method="post">
   <p>Reseptin nimi:
-    <input type="text" name="name" value="{{ recipe.name }}" />
+    <input type="text" maxlength="60" name="name" value="{{ recipe.name }}" />
   </p>
   <p>Ohje:
     <input type="text" name="instructions" value="{{ recipe.instructions }}" />
