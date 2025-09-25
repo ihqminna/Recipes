@@ -1,7 +1,6 @@
 import sqlite3
 from flask import Flask
 from flask import render_template, request, redirect, session, abort
-from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 import config
@@ -106,16 +105,14 @@ def new():
         return render_template("new_recipe.html", message=message)
     slug = recipes.create_slug(name)
     if imagefile:
-        print(imagefile.filename)
         if imagefile.filename == "":
             message = "Lisää kuvatiedostolle nimi."
             return render_template("new_recipe.html", message=message)
         elif not imagefile.filename.endswith(".jpg"):
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
             return render_template("new_recipe.html", message=message)
-        #else: imagefile = secure_filename(imagefile.filename)
         image = imagefile.read()
-        if len(image) > 100*1024:
+        if len(image) > 1024*1024:
             message = "Liian suuri kuvatiedosto."
             return render_template("new_recipe.html", message=message)            
     else: image = None
