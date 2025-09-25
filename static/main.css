@@ -13,6 +13,49 @@ body{
     font-weight: 600;
   }
 
+  .primary_button{
+    background-color: #550b60;
+    color: white;
+    border-radius: 24px;
+    padding: 12px 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .primary_button:hover{
+    box-shadow: darkorange 1px 6px 8px 4px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+  }
+
+  .secondary_button{
+    color: #550b60;
+    border-radius: 24px;
+    padding: 12px 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border: #550b60 2px solid;
+    background: none;
+  }
+
+  .secondary_button:hover{
+    box-shadow: darkorange 1px 6px 8px 4px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+    background-color: white;
+  }
+
+  input{
+    border-radius: 4px;
+  }
+
   a{
     font-weight: 800;
     color: #081F05;
