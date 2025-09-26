@@ -7,9 +7,9 @@
   <p>
     Hakusana:
     {% if query %}
-    <input type="text" name="query" value="{{ query }}" />
+    <input type="text" name="query" value="{{ query }}" required />
     {% else %}
-    <input type="text" name="query" />
+    <input type="text" name="query" required />
     {% endif %}
   </p>
   <input type="submit" value="Hae reseptejä" />
