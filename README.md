@@ -10,16 +10,15 @@
 * Käyttäjä pystyy etsimään reseptejä hakusanalla.
 * Reseptin voi poistaa.
 * Reseptiä voi muokata.
+* Kuvan lisääminen reseptiin.
 
 ## Tulevat toiminnot
 
 * Reseptiin voi lisätä ainesosia.
-* Kuvan lisääminen reseptiin.
 * Reseptisivulla sitä voi kommentoida.
 * Käyttäjäsivu, jossa näkee oman aktiivisuutensa.
-* Reseptiin voi lisätä avainsanoja (kuten "salaatti", "kevyt", "vegaaninen").
+* Reseptiin voi lisätä valmiita avainsanoja (kuten "salaatti", "kevyt", "vegaaninen").
 * Avainsanat on listattu erikseen ja niiden perusteella voi selata reseptejä.
-* Sovellus on responsiivinen mobiilikäyttöön.
 
 ## Sovelluksen asennus
 
