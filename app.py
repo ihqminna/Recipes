@@ -173,12 +173,12 @@ def save_recipe():
         abort(403)
 
     name = request.form["name"]
-    old_name = old_recipe.name
+    old_name = old_recipe["name"]
     if not name:
         name = old_name
     instructions = request.form["instructions"]
     if not instructions:
-        instructions = old_recipe.instructions
+        instructions = old_recipe["instructions"]
     imagefile = request.files["image"]
     if imagefile:
         if imagefile.filename == "":
@@ -191,7 +191,7 @@ def save_recipe():
         if len(image) > 1024*1024:
             message = "Liian suuri kuvatiedosto."
             return render_template("new_recipe.html", message=message)            
-    else: image = old_recipe.image
+    else: image = old_recipe["image"]
     if len(name) > 0:
         if name != old_name and not recipes.recipe_name_free(name):
             return "Reseptin nimi on jo käytössä"

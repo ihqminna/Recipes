@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Muokkaa reseptiä {{ recipe.name }}</h1>
-<form action="/tallenna" method="post">
+<form action="/tallenna" method="post" enctype="multipart/form-data">
   <p>Reseptin nimi:
     <input type="text" maxlength="60" name="name" value="{{ recipe.name }}" />
   </p>
