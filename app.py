@@ -183,7 +183,8 @@ def save_recipe():
             recipes.update_recipe(name, instructions, recipe_id, slug)
             return redirect("/resepti/" + slug)
     else:
-        return "Lisää reseptille nimi"
+        message = "Lisää reseptille nimi"
+        return render_template("edit_recipe.html", recipe=recipe, message=message) 
 
 if __name__ == "__main__":
     app.run(debug=True)
