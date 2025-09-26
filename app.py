@@ -166,25 +166,42 @@ def search():
 @app.route("/tallenna", methods=["POST"])
 def save_recipe():
     recipe_id = request.form["recipe_id"]
-    recipe = recipes.get_recipe_by_id(recipe_id)[0]
-    if not recipe:
+    old_recipe = recipes.get_recipe_by_id(recipe_id)[0]
+    if not old_recipe:
         abort(404)
-    if recipe["user_id"] != session["user_id"]:
+    if old_recipe["user_id"] != session["user_id"]:
         abort(403)
 
     name = request.form["name"]
-    old_name = request.form["old_name"]
+    old_name = old_recipe.name
+    if not name:
+        name = old_name
     instructions = request.form["instructions"]
+    if not instructions:
+        instructions = old_recipe.instructions
+    imagefile = request.files["image"]
+    if imagefile:
+        if imagefile.filename == "":
+            message = "Lisää kuvatiedostolle nimi."
+            return render_template("new_recipe.html", message=message)
+        elif not imagefile.filename.endswith(".jpg"):
+            message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
+            return render_template("new_recipe.html", message=message)
+        image = imagefile.read()
+        if len(image) > 1024*1024:
+            message = "Liian suuri kuvatiedosto."
+            return render_template("new_recipe.html", message=message)            
+    else: image = old_recipe.image
     if len(name) > 0:
         if name != old_name and not recipes.recipe_name_free(name):
             return "Reseptin nimi on jo käytössä"
         else:    
             slug = recipes.create_slug(name)
-            recipes.update_recipe(name, instructions, recipe_id, slug)
+            recipes.update_recipe(name, instructions, recipe_id, slug, image)
             return redirect("/resepti/" + slug)
     else:
         message = "Lisää reseptille nimi"
-        return render_template("edit_recipe.html", recipe=recipe, message=message) 
+        return render_template("edit_recipe.html", recipe=old_recipe, message=message) 
 
 if __name__ == "__main__":
     app.run(debug=True)

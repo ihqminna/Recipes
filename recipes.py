@@ -52,9 +52,9 @@ def remove_recipe(recipe_id):
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
     #Delete also from other tables where reference to recipe
 
-def update_recipe(name, instructions, recipe_id, slug):
-    sql = "UPDATE recipes SET name = ?, instructions = ?, slug = ? WHERE id = ?"
-    db.execute(sql, [name, instructions, slug, recipe_id])
+def update_recipe(name, instructions, recipe_id, slug, image):
+    sql = "UPDATE recipes SET name = ?, instructions = ?, slug = ?, image = ? WHERE id = ?"
+    db.execute(sql, [name, instructions, slug, image, recipe_id])
 
 def search(query):
     sql = "SELECT * FROM recipes WHERE instructions LIKE ? OR name LIKE ?"
