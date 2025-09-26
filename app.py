@@ -67,11 +67,14 @@ def new_user():
 
 @app.route("/omatreseptit")
 def own_recipes():
-    username = session["user"]
-    user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-    own_recipes = recipes.get_recipes_by_user(user_id)
-    recipes_count = len(own_recipes)
-    return render_template("own_recipes.html", count=recipes_count, recipes=own_recipes)
+    if session:
+        username = session["user"]
+        user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
+        own_recipes = recipes.get_recipes_by_user(user_id)
+        recipes_count = len(own_recipes)
+        return render_template("own_recipes.html", count=recipes_count, recipes=own_recipes)
+    else:
+        return render_template("/kirjaudu")
 
 @app.route("/avainsanat")
 def keywords():
@@ -153,9 +156,12 @@ def edit_recipe(slug):
 
 @app.route("/omatreseptit/haku", methods=["GET"])
 def search_own():
-    query = request.args.get("query")
-    results = recipes.search(query) if query else []
-    return render_template("own_recipes.html", query=query, results=results)
+    if session:
+        query = request.args.get("query")
+        results = recipes.search(query) if query else []
+        return render_template("own_recipes.html", query=query, results=results)
+    else:
+        return render_template("/kirjaudu")
 
 @app.route("/haku", methods=["GET"])
 def search():
