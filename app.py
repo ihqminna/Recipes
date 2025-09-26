@@ -26,7 +26,13 @@ def in_logger():
     password = request.form["password"]
 
     sql = "SELECT * FROM users WHERE username = ?"
-    user = db.query(sql, [username])[0]
+    user_query = db.query(sql, [username])
+    if not user_query:
+        message =  "Väärä käyttäjätunnus tai salasana"
+        return render_template("login.html", message=message) 
+    else:
+        user = user_query[0] 
+
     password_hash = user["password_hash"]
 
     if check_password_hash(password_hash, password):
