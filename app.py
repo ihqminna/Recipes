@@ -105,6 +105,7 @@ def thank_you():
 @app.route("/uusi", methods=["POST"])
 def new():
     name = request.form["name"]
+    name = str(name)
     instructions = request.form["instructions"]
     imagefile = request.files["image"]
     if not len(name) > 0:
