@@ -102,6 +102,11 @@ body{
     filter: sepia(0) brightness(1);
   }
 
+  .recipe_page_image{
+    max-width: 50%;
+    border-radius: 4px;
+  }
+
   header{
     display: flex;
     flex-direction: row;

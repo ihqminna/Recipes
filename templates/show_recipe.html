@@ -4,6 +4,11 @@
 
 {% block content %}
 <p>{{ recipe.instructions }}</p>
+{% if recipe.image %}
+<img class="recipe_page_image" src="data:image/jpeg;base64,{{ recipe['image'] }}" class="recipe_list_image" alt="result.name">
+{% else %}
+<img class="recipe_page_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
+{% endif %}
 {% if session.user_id == recipe.user_id %}
 <a class="secondary_button" href="/muokkaa/{{ recipe.slug }}">Muokkaa reseptiä</a>
 <a class="secondary_button" href="/poista/{{ recipe.slug }}">Poista resepti</a>
