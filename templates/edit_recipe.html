@@ -5,19 +5,17 @@
 {% block content %}
 <h1>Muokkaa reseptiä {{ recipe.name }}</h1>
 <form action="/tallenna" method="post" enctype="multipart/form-data">
-  <p>Reseptin nimi:
-    <input type="text" maxlength="60" name="name" value="{{ recipe.name }}" />
-  </p>
-  <p>Ohje:
-    <input type="text" name="instructions" value="{{ recipe.instructions }}" />
-  </p>
+  <p>Reseptin nimi:</p>
+    <input type="text" maxlength="60" size="30" name="name" value="{{ recipe.name }}" />
+  <p>Ohje:</p>
+    <textarea type="textarea" cols="60" size="300" rows="6" name="instructions" value="{{ recipe.instructions }}"></textarea>
   <input type="hidden" name="recipe_id" value="{{ recipe.id }}" />
-  <p>Reseptin kuva:
+  <p>Reseptin kuva:</p>
     <input type="file" class="secondary_button" name="image" id="image" accept=".jpg" />
-  </p>
   {% if message %}
   <p><strong>{{ message }}</strong></p>
   {% endif %}
+  <p></p>
   <input type="submit" class="primary_button" value="Tallenna resepti" />
 </form>
 <p>

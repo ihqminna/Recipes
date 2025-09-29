@@ -66,6 +66,11 @@ body{
     max-width: 100%;
   }
 
+  form > p{
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+
   .recipe_list{
     display: flex;
     flex-flow: row wrap;
