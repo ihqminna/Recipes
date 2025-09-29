@@ -46,6 +46,7 @@ def in_logger():
 @app.route("/kirjaaulos")
 def logout():
     del session["user"]
+    del session["user_id"]
     return redirect ("/")
 
 @app.route("/rekisteroidy")
