@@ -39,17 +39,40 @@ def handle_images(recipes):
         recipes_with_image.append(recipe_with_image)
     return recipes_with_image
 
-def add_recipe_by_user(name, instructions, slug, username, image):
+def add_recipe_by_user(name, ingredients, instructions, slug, username, image):
     user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
     sql = "INSERT INTO recipes (name, instructions, user_id, slug, image) VALUES (?, ?, ?, ?, ?)"
     db.execute(sql, [name, instructions, user_id, slug, image])
+    if ingredients:
+        recipe_id = db.query("SELECT id FROM recipes WHERE name = ?", [name]) 
+        for i in ingredients:
+            existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])[0]
+            if not existing_id:
+                sql = "INSERT INTO ingredients (name) VALUES (?)"
+                db.execute(sql, [i])
+                existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])[0]
+            sql = "INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES (?, ?)"
+            db.execute(sql, [recipe_id, existing_id])
 
-def add_recipe(name, instructions, slug, image):
+def add_recipe(name, ingredients, instructions, slug, image):
     db.execute("INSERT INTO recipes (name, instructions, slug, image) VALUES (?, ?, ?, ?)", [name, instructions, slug, image])
+    if ingredients:
+        recipe_id = db.query("SELECT id FROM recipes WHERE name = ?", [name])[0][0]
+        for i in ingredients:
+            if i:
+                existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])
+                if not existing_id:
+                    sql = "INSERT INTO ingredients (name) VALUES (?)"
+                    db.execute(sql, [i])
+                    existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])[0][0]
+                else:
+                    existing_id = existing_id[0][0]
+                sql = "INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES (?, ?)"
+                db.execute(sql, [recipe_id, existing_id])
 
 def remove_recipe(recipe_id):
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
-    #Delete also from other tables where reference to recipe
+    #Delete also from other tables where references to recipe (recipe_ingredient, recipe_tag)
 
 def update_recipe(name, instructions, recipe_id, slug, image):
     sql = "UPDATE recipes SET name = ?, instructions = ?, slug = ?, image = ? WHERE id = ?"

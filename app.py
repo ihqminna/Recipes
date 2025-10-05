@@ -143,9 +143,9 @@ def new():
     else: image = None
     if session:
         username = session["user"]
-        recipes.add_recipe_by_user(name, instructions, slug, username, image)
+        recipes.add_recipe_by_user(name, ingredients, instructions, slug, username, image)
     else:
-        recipes.add_recipe(name, instructions, slug, image)
+        recipes.add_recipe(name, ingredients, instructions, slug, image)
     return redirect("/kiitos")
     
 @app.route("/poista/<slug>", methods=["GET", "POST"])
