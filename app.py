@@ -109,30 +109,37 @@ def new_recipe():
 def thank_you():
     return render_template("thank_you.html")
 
-@app.route("/uusi", methods=["POST"])
+@app.route("/uusi", methods=["POST", "GET"])
 def new():
     name = request.form["name"]
     name = str(name)
+    ingredients = request.form.getlist("ingredient")
     instructions = request.form["instructions"]
     imagefile = request.files["image"]
+
+    if request.form.get("action") == "Lisää ainesosa":
+        ingredients = recipes.ingredients_clean(ingredients)
+        ingredients.append("")
+        return render_template("new_recipe.html", name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+    
     if not len(name) > 0:
         message = "Lisää reseptille nimi"
-        return render_template("new_recipe.html", message=message)
+        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     if not recipes.recipe_name_free(name):
         message = "Reseptin nimi on jo käytössä"
-        return render_template("new_recipe.html", message=message)
+        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     slug = recipes.create_slug(name)
     if imagefile:
         if imagefile.filename == "":
             message = "Lisää kuvatiedostolle nimi."
-            return render_template("new_recipe.html", message=message)
+            return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)
         elif not imagefile.filename.endswith(".jpg"):
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
-            return render_template("new_recipe.html", message=message)
+            return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)
         image = imagefile.read()
         if len(image) > 1024*1024:
             message = "Liian suuri kuvatiedosto."
-            return render_template("new_recipe.html", message=message)            
+            return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)            
     else: image = None
     if session:
         username = session["user"]

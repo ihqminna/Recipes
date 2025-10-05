@@ -87,3 +87,9 @@ def get_recipes_by_tag(slug):
 def get_tag_plural(slug):
     plural = db.query("SELECT plural FROM tags WHERE slug = ?", [slug])[0][0]
     return plural
+
+def ingredients_clean(ingredients):
+    for i in ingredients:
+        if i is "":
+            ingredients.remove(i)
+    return ingredients

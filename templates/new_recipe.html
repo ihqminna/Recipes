@@ -4,16 +4,24 @@
 
 {% block content %}
 <form action="/uusi" method="post" enctype="multipart/form-data">
-  <p>Reseptin nimi:</p>
-    <input type="text" maxlength="60" size="30" name="name" />
-  <p>Ohje:</p>
-    <textarea type="textarea" cols="60" size="300" rows="6" name="instructions"></textarea>
-  <p>Reseptin kuva:</p>
-    <input type="file" class="secondary_button" name="image" id="image" accept=".jpg" />
+  <h2>Reseptin nimi:</h2>
+  <input type="text" maxlength="60" size="30" name="name" value="{{ name }}" />
+  <h2>Ainesosat:</h2>
+  {% for i in ingredients %}
+    <input type="text" maxlength="20" size="20" name="ingredient" value="{{ i }}" />
+    <br>
+  {% endfor %}
+  <br>
+  <input type="submit" name="action" class="secondary_button" value="Lisää ainesosa" />
+
+  <h2>Ohje:</h2>
+    <textarea type="textarea" cols="60" size="300" rows="6" name="instructions" value="{{ instructions }}"></textarea>
+  <h2>Reseptin kuva:</h2>
+    <input type="file" class="secondary_button" name="image" id="image" accept=".jpg" value="{{ imagefile }}" />
   {% if message %}
   <p><strong>{{ message }}</strong></p>
   {% endif %}
   <p></p>
-  <input type="submit" class="primary_button" value="Tallenna resepti" />
+  <input type="submit" name="action" class="primary_button" value="Tallenna resepti" />
 </form>
 {% endblock %}
