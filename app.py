@@ -85,7 +85,8 @@ def own_recipes():
 
 @app.route("/avainsanat")
 def keywords():
-    return render_template("keywords.html")
+    tags = recipes.get_tags()
+    return render_template("keywords.html", tags=tags)
 
 @app.route("/resepti/<slug>")
 def show_recipe(slug):

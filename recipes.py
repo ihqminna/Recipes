@@ -75,3 +75,6 @@ def create_slug(name):
             add = ""
         slug = slug + add
     return slug
+
+def get_tags():
+    return db.query("SELECT * FROM tags",)
