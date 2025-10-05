@@ -5,6 +5,9 @@
 {% block content %}
 <div style="display: flex; width: 100%">
   <div style="max-width: 600px; min-width: 300px; margin: 8px">
+    {% for t in tags %}
+    <p>{{ t.name }}</p>
+    {% endfor %}
     <h2>Ainesosat</h2>
     <ul>
       {% for i in ingredients %}

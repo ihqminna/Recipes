@@ -131,7 +131,11 @@ def get_tags():
 def get_recipes_by_tag(slug):
     sql = "SELECT R.* FROM recipes R JOIN recipe_tag RT ON R.id = RT.recipe_id JOIN tags T ON rt.tag_id = t.id WHERE T.slug = ?"
     recipes = db.query(sql, [slug])
-    return recipes
+    return handle_images(recipes)
+
+def get_tags_by_recipe(recipe_id):
+    sql = "SELECT T.name FROM tags T JOIN recipe_tag RT ON T.id = RT.tag_id WHERE RT.recipe_id = ?"
+    return db.query(sql, [recipe_id])
 
 def get_tag_plural(slug):
     plural = db.query("SELECT plural FROM tags WHERE slug = ?", [slug])[0][0]

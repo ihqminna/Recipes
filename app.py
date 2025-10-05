@@ -102,7 +102,8 @@ def show_recipe(slug):
     print(recipe)
     recipe_id = recipe["id"]
     ingredients = recipes.get_ingredients(recipe_id)
-    return render_template("show_recipe.html", recipe=recipe, ingredients=ingredients)
+    tags = recipes.get_tags_by_recipe(recipe_id)
+    return render_template("show_recipe.html", recipe=recipe, ingredients=ingredients, tags=tags)
 
 @app.route("/uusiresepti")
 def new_recipe():
