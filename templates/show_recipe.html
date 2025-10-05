@@ -3,13 +3,25 @@
 {% set title = recipe.name %}
 
 {% block content %}
-<p>{{ recipe.instructions }}</p>
-{% if recipe.image %}
-<img src="data:image/jpeg;base64,{{ recipe.image }}" class="recipe_list_image" alt="{{ recipe.name }}">
-{% endif %}
-
-{% if session.user_id == recipe.user_id %}
-<a class="secondary_button" href="/muokkaa/{{ recipe.slug }}">Muokkaa reseptiä</a>
-<a class="secondary_button" href="/poista/{{ recipe.slug }}">Poista resepti</a>
-{% endif %}
+<div style="display: flex; width: 100%">
+  <div style="max-width: 600px; min-width: 300px; margin: 8px">
+    <h2>Ainesosat</h2>
+    <ul>
+      {% for i in ingredients %}
+      <li>{{ i }}</li>
+      {% endfor %}
+    </ul>
+    <h2>Ohje</h2>
+    <p>{{ recipe.instructions }}</p>
+    {% if session.user_id == recipe.user_id %}
+    <a class="secondary_button" href="/muokkaa/{{ recipe.slug }}">Muokkaa reseptiä</a>
+    <a class="secondary_button" href="/poista/{{ recipe.slug }}">Poista resepti</a>
+    {% endif %}
+  </div>
+  <div style="max-width: 600px; min-width: 300px; margin: 8px">
+    {% if recipe.image %}
+    <img src="data:image/jpeg;base64,{{ recipe.image }}" class="recipe_list_image" alt="{{ recipe.name }}">
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

@@ -99,7 +99,10 @@ def show_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
     if not recipe:
         abort(404)
-    return render_template("show_recipe.html", recipe=recipe)
+    print(recipe)
+    recipe_id = recipe["id"]
+    ingredients = recipes.get_ingredients(recipe_id)
+    return render_template("show_recipe.html", recipe=recipe, ingredients=ingredients)
 
 @app.route("/uusiresepti")
 def new_recipe():
