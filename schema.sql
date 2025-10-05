@@ -43,3 +43,10 @@ CREATE TABLE recipe_ingredient (
     recipe_id INTEGER REFERENCES recipes,
     amount TEXT
 );
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY,
+    recipe_id INTEGER REFERENCES recipes,
+    user_id INTEGER REFERENCES users,
+    comment TEXT
+);
