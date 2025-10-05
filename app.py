@@ -169,12 +169,13 @@ def remove_recipe(slug):
 @app.route("/muokkaa/<slug>")
 def edit_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
+    recipe_id = recipe["id"]
     if not recipe:
         abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
     
-    return render_template("edit_recipe.html", recipe=recipe)
+    return render_template("edit_recipe.html", recipe_id=recipe_id)
 
 @app.route("/omatreseptit/haku", methods=["GET"])
 def search_own():
@@ -195,41 +196,48 @@ def search():
 def save_recipe():
     recipe_id = request.form["recipe_id"]
     old_recipe = recipes.get_recipe_by_id(recipe_id)[0]
+    slug = recipes.get_slug(recipe_id)
     if not old_recipe:
         abort(404)
     if old_recipe["user_id"] != session["user_id"]:
         abort(403)
-
     name = request.form["name"]
+    name = str(name)
     old_name = old_recipe["name"]
     if not name:
         name = old_name
+    ingredients = request.form.getlist("ingredient")
     instructions = request.form["instructions"]
     if not instructions:
         instructions = old_recipe["instructions"]
     imagefile = request.files["image"]
+    if request.form.get("action") == "Lisää ainesosa":
+        ingredients = recipes.ingredients_clean(ingredients)
+        ingredients.append("")
+        return render_template("edit_recipe.html", slug=slug, recipe_id=recipe_id, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     if imagefile:
         if imagefile.filename == "":
             message = "Lisää kuvatiedostolle nimi."
-            return render_template("new_recipe.html", message=message)
+            return render_template("edit_recipe.html", slug=slug, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)
         elif not imagefile.filename.endswith(".jpg"):
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
-            return render_template("new_recipe.html", message=message)
+            return render_template("edit_recipe.html", slug=slug, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)
         image = imagefile.read()
         if len(image) > 1024*1024:
             message = "Liian suuri kuvatiedosto."
-            return render_template("new_recipe.html", message=message)            
+            return render_template("edit_recipe.html", slug=slug, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)            
     else: image = old_recipe["image"]
     if len(name) > 0:
         if name != old_name and not recipes.recipe_name_free(name):
             return "Reseptin nimi on jo käytössä"
+            return render_template("edit_recipe.html", recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
         else:    
             slug = recipes.create_slug(name)
-            recipes.update_recipe(name, instructions, recipe_id, slug, image)
+            recipes.update_recipe(name, ingredients, instructions, recipe_id, slug, image)
             return redirect("/resepti/" + slug)
     else:
         message = "Lisää reseptille nimi"
-        return render_template("edit_recipe.html", recipe=old_recipe, message=message) 
+        return render_template("edit_recipe.html", slug=slug, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile) 
 
 if __name__ == "__main__":
     app.run(debug=True)

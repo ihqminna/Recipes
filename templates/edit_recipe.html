@@ -3,15 +3,22 @@
 {% block title %}Muokkaa reseptiä{% endblock %}
 
 {% block content %}
-<h1>Muokkaa reseptiä {{ recipe.name }}</h1>
+<h1>Muokkaa reseptiä {{ name }}</h1>
 <form action="/tallenna" method="post" enctype="multipart/form-data">
   <p>Reseptin nimi:</p>
-    <input type="text" maxlength="60" size="30" name="name" value="{{ recipe.name }}" />
+    <input type="text" maxlength="60" size="30" name="name" value="{{ name }}" />
+  <h2>Ainesosat:</h2>
+  {% for i in ingredients %}
+  <input type="text" maxlength="20" size="20" name="ingredient" value="{{ i }}" />
+  <br>
+  {% endfor %}
+  <br>
+  <input type="submit" name="action" class="secondary_button" value="Lisää ainesosa" />
   <p>Ohje:</p>
-    <textarea type="textarea" cols="60" size="300" rows="6" name="instructions" value="{{ recipe.instructions }}"></textarea>
-  <input type="hidden" name="recipe_id" value="{{ recipe.id }}" />
+    <textarea type="textarea" cols="60" size="300" rows="6" name="instructions" value="{{ instructions }}"></textarea>
+  <input type="hidden" name="recipe_id" value="{{ recipe_id }}" />
   <p>Reseptin kuva:</p>
-    <input type="file" class="secondary_button" name="image" id="image" accept=".jpg" />
+    <input type="file" class="secondary_button" name="image" id="image" accept=".jpg" value="{{ imagefile }}" />
   {% if message %}
   <p><strong>{{ message }}</strong></p>
   {% endif %}
@@ -19,6 +26,6 @@
   <input type="submit" class="primary_button" value="Tallenna resepti" />
 </form>
 <p>
-  <a class="secondary_button" href="/resepti/{{ recipe.slug }}">Palaa reseptiin</a>
+  <a class="secondary_button" href="/resepti/{{ slug }}">Palaa reseptiin</a>
 </p>
 {% endblock %}

@@ -44,19 +44,24 @@ def add_recipe_by_user(name, ingredients, instructions, slug, username, image):
     sql = "INSERT INTO recipes (name, instructions, user_id, slug, image) VALUES (?, ?, ?, ?, ?)"
     db.execute(sql, [name, instructions, user_id, slug, image])
     if ingredients:
-        recipe_id = db.query("SELECT id FROM recipes WHERE name = ?", [name]) 
+        ingredients = ingredients_clean(ingredients)
+        recipe_id = db.query("SELECT id FROM recipes WHERE name = ?", [name])[0][0]
         for i in ingredients:
-            existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])[0]
-            if not existing_id:
-                sql = "INSERT INTO ingredients (name) VALUES (?)"
-                db.execute(sql, [i])
-                existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])[0]
-            sql = "INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES (?, ?)"
-            db.execute(sql, [recipe_id, existing_id])
+            if i:
+                existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])
+                if not existing_id:
+                    sql = "INSERT INTO ingredients (name) VALUES (?)"
+                    db.execute(sql, [i])
+                    existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])[0][0]
+                else:
+                    existing_id = existing_id[0][0]
+                sql = "INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES (?, ?)"
+                db.execute(sql, [recipe_id, existing_id])
 
 def add_recipe(name, ingredients, instructions, slug, image):
     db.execute("INSERT INTO recipes (name, instructions, slug, image) VALUES (?, ?, ?, ?)", [name, instructions, slug, image])
     if ingredients:
+        ingredients = ingredients_clean(ingredients)
         recipe_id = db.query("SELECT id FROM recipes WHERE name = ?", [name])[0][0]
         for i in ingredients:
             if i:
@@ -74,13 +79,26 @@ def remove_recipe(recipe_id):
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
     #Delete also from other tables where references to recipe (recipe_ingredient, recipe_tag)
 
-def update_recipe(name, instructions, recipe_id, slug, image):
+def update_recipe(name, ingredients, instructions, recipe_id, slug, image):
     sql = "UPDATE recipes SET name = ?, instructions = ?, slug = ?, image = ? WHERE id = ?"
     db.execute(sql, [name, instructions, slug, image, recipe_id])
+    if ingredients:
+        ingredients = ingredients_clean(ingredients)
+        for i in ingredients:
+            if i:
+                existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])
+                if not existing_id:
+                    sql = "INSERT INTO ingredients (name) VALUES (?)"
+                    db.execute(sql, [i])
+                    existing_id = db.query("SELECT id FROM ingredients WHERE name = ?", [i])[0][0]
+                else:
+                    existing_id = existing_id[0][0]
+                sql = "INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES (?, ?)"
+                db.execute(sql, [recipe_id, existing_id])
 
 def search(query):
     sql = "SELECT * FROM recipes WHERE instructions LIKE ? OR name LIKE ?"
-    #Add more possibilities to search
+    #Add ingredients to search
     return db.query(sql, ["%" + query + "%", "%" + query + "%"])
 
 def create_slug(name):
@@ -99,6 +117,10 @@ def create_slug(name):
         slug = slug + add
     return slug
 
+def get_slug(recipe_id):
+    slug = db.query("SELECT slug FROM recipes WHERE id = ?", [recipe_id])[0][0]
+    return slug
+
 def get_tags():
     return db.query("SELECT * FROM tags",)
 
@@ -112,6 +134,7 @@ def get_tag_plural(slug):
     return plural
 
 def ingredients_clean(ingredients):
+    ingredients = list(dict.fromkeys(ingredients))
     for i in ingredients:
         if i is "":
             ingredients.remove(i)
