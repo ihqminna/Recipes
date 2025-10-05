@@ -17,7 +17,7 @@
 * Reseptiin voi lisätä ainesosia.
 * Reseptisivulla sitä voi kommentoida.
 * Käyttäjäsivu, jossa näkee oman aktiivisuutensa.
-* Reseptiin voi lisätä valmiita avainsanoja (kuten "salaatti", "kevyt", "vegaaninen").
+* Reseptiin voi lisätä valmiita avainsanoja (kuten "salaatti" ja "vegaaninen").
 * Avainsanat on listattu erikseen ja niiden perusteella voi selata reseptejä.
 
 ## Sovelluksen asennus
@@ -28,10 +28,11 @@ Asenna `flask`-kirjasto:
 $ pip install flask
 ```
 
-Luo tietokannan taulut:
+Luo tietokannan taulut ja reseptien avainsanat:
 
 ```
 $ sqlite3 database.db < schema.sql
+$ sqlite3 database.db < init.sql
 ```
 
 Voit käynnistää sovelluksen näin:
