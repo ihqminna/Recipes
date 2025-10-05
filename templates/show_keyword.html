@@ -3,5 +3,12 @@
 {% set title = plural %}
 
 {% block content %}
-{{ super() }}
+{% if recipes %}
+    {{ super() }}
+{% else %}
+    <p>Ei vielä reseptejä tällä avainsanalla.</p>
+    <div style="margin-top: 36px">
+      <a href="/uusiresepti" class="secondary_button">Uusi resepti</a>
+    </div>
+{% endif %}
 {% endblock %}
