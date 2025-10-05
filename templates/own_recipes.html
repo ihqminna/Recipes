@@ -4,6 +4,7 @@
 
 {% block content %}
 <p>Olet lisännyt yhteensä {{ recipes | length }} reseptiä ja xx kommenttia</p>
+{% if recipes %}
 <form action="/omatreseptit/haku" method="get">
   <p>
     Hakusana:
@@ -13,7 +14,12 @@
     <input type="text" name="query" required />
     {% endif %}
   </p>
-  <input type="submit" value="Hae reseptejä" />
+  <input type="submit" class="secondary_button" value="Hae reseptejä" />
 </form>
+{% else %}
+  <div style="margin-top: 36px">
+    <a href="/uusiresepti" class="secondary_button">Lisää resepti</a>
+  </div>
+{% endif %}
 {{ super() }}
 {% endblock %}
