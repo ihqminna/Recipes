@@ -7,7 +7,7 @@
   <div class="recipe_list_item">
     <a href="/resepti/{{ result.slug }}">
       {% if result.image %}
-      <img src="data:image/jpeg;base64,{{ result['image'] }}" class="recipe_list_image" alt="result.name">
+      <img src="data:image/jpeg;base64,{{ result['image'] }}" class="recipe_list_image" alt="{{ result.name }}">
       {% else %}
       <img class="recipe_list_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
       {% endif %}

@@ -11,12 +11,14 @@ def recipe_name_free(name):
         return True
 
 def get_recipe_by_id(recipe_id):
-    sql = "SELECT * FROM recipes WHERE id=?"
-    return db.query(sql, [recipe_id])
+    recipes = db.query("SELECT * FROM recipes WHERE id=?", [recipe_id])
+    recipe = handle_images(recipes)
+    return recipe
 
 def get_recipe_by_slug(slug):
-    sql = "SELECT * FROM recipes WHERE slug=?"
-    return db.query(sql, [slug])
+    recipes = db.query("SELECT * FROM recipes WHERE slug=?", [slug])
+    recipe = handle_images(recipes)
+    return recipe
 
 def get_recipes_by_user(user_id):
     recipes = db.query("SELECT * FROM recipes WHERE user_id=?", [user_id])
