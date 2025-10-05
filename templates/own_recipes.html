@@ -3,6 +3,7 @@
 {% set title = "Omat reseptisi" %}
 
 {% block content %}
+<p>Olet lisännyt yhteensä {{ recipes | length }} reseptiä ja xx kommenttia</p>
 <form action="/omatreseptit/haku" method="get">
   <p>
     Hakusana:
