@@ -139,3 +139,10 @@ def ingredients_clean(ingredients):
         if i is "":
             ingredients.remove(i)
     return ingredients
+
+def get_ingredients(recipe_id):
+    ingredients = db.query("SELECT I.name FROM ingredients I JOIN recipe_ingredient RI ON I.id = RI.ingredient_id WHERE RI.recipe_id = ?", [recipe_id])
+    ingredient_names = []
+    for i in ingredients:
+        ingredient_names.append(i[0])
+    return ingredient_names

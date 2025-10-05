@@ -3,7 +3,6 @@
 {% set title = "Muokkaa reseptiä" %}
 
 {% block content %}
-<h1>Muokkaa reseptiä {{ name }}</h1>
 <form action="/tallenna" method="post" enctype="multipart/form-data">
   <p>Reseptin nimi:</p>
     <input type="text" maxlength="60" size="30" name="name" value="{{ name }}" />

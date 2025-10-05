@@ -170,12 +170,15 @@ def remove_recipe(slug):
 def edit_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
     recipe_id = recipe["id"]
+    ingredients = recipes.get_ingredients(recipe_id)
+    name = recipe["name"]
+    instructions = recipe["instructions"]
+    imagefile = recipe["image"]
     if not recipe:
         abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
-    
-    return render_template("edit_recipe.html", recipe_id=recipe_id)
+    return render_template("edit_recipe.html", name=name, instructions=instructions, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
 
 @app.route("/omatreseptit/haku", methods=["GET"])
 def search_own():
