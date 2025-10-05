@@ -1,12 +1,12 @@
 DELETE FROM tags;
 
-INSERT INTO tags (name) VALUES ('Vegaaninen');
-INSERT INTO tags (name) VALUES ('Lisuke');
-INSERT INTO tags (name) VALUES ('Gluteeniton');
-INSERT INTO tags (name) VALUES ('Salaatti');
-INSERT INTO tags (name) VALUES ('Keitto');
-INSERT INTO tags (name) VALUES ('Helppo');
-INSERT INTO tags (name) VALUES ('Pääruoka');
-INSERT INTO tags (name) VALUES ('Pikkusuolainen');
-INSERT INTO tags (name) VALUES ('Jälkiruoka');
-INSERT INTO tags (name) VALUES ('Leivonnainen');
+INSERT INTO tags (name, plural, slug) VALUES ('Vegaaninen', 'Vegaaniset', 'vegaaninen');
+INSERT INTO tags (name, plural, slug) VALUES ('Lisuke', 'Lisukkeet', 'lisuke');
+INSERT INTO tags (name, plural, slug) VALUES ('Gluteeniton', 'Gluteenittomat', 'gluteeniton');
+INSERT INTO tags (name, plural, slug) VALUES ('Salaatti', 'Salaatit', 'salaatti');
+INSERT INTO tags (name, plural, slug) VALUES ('Keitto', 'Keitot', 'keitto');
+INSERT INTO tags (name, plural, slug) VALUES ('Helppo ja nopea', 'Helpot ja nopeat', 'helpotjanopeat');
+INSERT INTO tags (name, plural, slug) VALUES ('Pääruoka', 'Pääruoat', 'paaruoka');
+INSERT INTO tags (name, plural, slug) VALUES ('Pikkusuolainen', 'Pikkusuolaiset', 'pikkusuolainen');
+INSERT INTO tags (name, plural, slug) VALUES ('Jälkiruoka', 'Jälkiruoat', 'jalkiruoka');
+INSERT INTO tags (name, plural, slug) VALUES ('Leivonnainen', 'Leivonnaiset', 'leivonnainen');

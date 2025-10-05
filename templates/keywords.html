@@ -5,7 +5,7 @@
 {% block content %}
 <ul>
 {% for tag in tags %}
-<li>{{ tag.name }}</li>
+<a href="/avainsanat/{{ tag.slug }}"><li>{{ tag.plural }}</li></a>
 {% endfor %}
 </ul>
 {% endblock %}

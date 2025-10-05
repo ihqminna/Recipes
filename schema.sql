@@ -21,7 +21,9 @@ CREATE TABLE visits (
 
 CREATE TABLE tags (
     id INTEGER PRIMARY KEY,
-    name TEXT
+    name TEXT,
+    plural TEXT,
+    slug TEXT
 );
 
 CREATE TABLE recipe_tag (

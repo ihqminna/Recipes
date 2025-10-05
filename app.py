@@ -88,6 +88,12 @@ def keywords():
     tags = recipes.get_tags()
     return render_template("keywords.html", tags=tags)
 
+@app.route("/avainsanat/<slug>")
+def show_tag(slug):
+    recipe_list = recipes.get_recipes_by_tag(slug)
+    plural = recipes.get_tag_plural(slug)
+    return render_template("show_keyword.html", recipes=recipe_list, plural=plural)
+
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]

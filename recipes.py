@@ -78,3 +78,12 @@ def create_slug(name):
 
 def get_tags():
     return db.query("SELECT * FROM tags",)
+
+def get_recipes_by_tag(slug):
+    sql = "SELECT R.* FROM recipes R JOIN recipe_tag RT ON R.id = RT.recipe_id JOIN tags T ON rt.tag_id = t.id WHERE T.slug = ?"
+    recipes = db.query(sql, [slug])
+    return recipes
+
+def get_tag_plural(slug):
+    plural = db.query("SELECT plural FROM tags WHERE slug = ?", [slug])[0][0]
+    return plural
