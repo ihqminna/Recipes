@@ -4,19 +4,25 @@
 
 {% block content %}
 <form action="/tallenna" method="post" enctype="multipart/form-data">
-  <p>Reseptin nimi:</p>
+  <h2>Reseptin nimi</h2>
     <input type="text" maxlength="60" size="30" name="name" value="{{ name }}" />
-  <h2>Ainesosat:</h2>
+  <h2>Avainsanat</h2>
+  <select name="tag" id="tag">
+  {% for tag in all_tags %}
+    <option value="{{ tag.name }}">{{ tag.name }}</option>
+  {% endfor %}
+  </select>
+  <h2>Ainesosat</h2>
   {% for i in ingredients %}
   <input type="text" maxlength="20" size="20" name="ingredient" value="{{ i }}" />
   <br>
   {% endfor %}
   <br>
   <input type="submit" name="action" class="secondary_button" value="Lisää ainesosa" />
-  <p>Ohje:</p>
+  <h2>Ohje</h2>
     <textarea type="textarea" cols="60" size="300" rows="6" name="instructions" value="{{ instructions }}"></textarea>
   <input type="hidden" name="recipe_id" value="{{ recipe_id }}" />
-  <p>Reseptin kuva:</p>
+  <h2>Reseptin kuva</h2>
     <input type="file" class="secondary_button" name="image" id="image" accept=".jpg" value="{{ imagefile }}" />
   {% if message %}
   <p><strong>{{ message }}</strong></p>

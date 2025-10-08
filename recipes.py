@@ -37,8 +37,10 @@ def handle_images(recipes):
         recipe_with_image["slug"] = recipe["slug"]
         recipe_with_image["id"] = recipe["id"]
         recipe_with_image["user_id"] = recipe["user_id"]
-        if recipe["image"]:
+        if recipe["image"] and type(recipe["image"]) != str:
             recipe_with_image["image"] = base64.b64encode(recipe["image"]).decode("utf-8")
+        elif recipe["image"]:
+            recipe_with_image["image"] = recipe["image"]
         else: recipe_with_image["image"] = None
         recipes_with_image.append(recipe_with_image)
     return recipes_with_image
