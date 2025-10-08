@@ -107,8 +107,7 @@ def show_recipe(slug):
 
 @app.route("/uusiresepti")
 def new_recipe():
-    if not session["user_id"]:
-        abort(403)
+    require_login()
     return render_template("new_recipe.html")
 
 @app.route("/kiitos")
