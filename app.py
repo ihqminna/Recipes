@@ -24,6 +24,10 @@ def login():
 def in_logger():
     username = request.form["username"]
     password = request.form["password"]
+    
+    if not username or not password or len(username) > 20 or len(password) > 30:
+        message =  "Väärä käyttäjätunnus tai salasana"
+        return render_template("login.html", message=message)
 
     sql = "SELECT * FROM users WHERE username = ?"
     user_query = db.query(sql, [username])
@@ -59,6 +63,12 @@ def new_user():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+    if not username or not password1 or not password2:
+        message = "Täytäthän käyttäjätunnuksen ja molemmat salasanat"
+        return render_template("register.html", message=message)
+    elif len(username) > 20 or len(password1) > 30 or len(password2) > 30:
+        message =  "Liian pitkä käyttäjätunnus tai salasana"
+        return render_template("login.html", message=message)
     if password1 != password2:
         message = "Salasanat eivät täsmää"
         return render_template("register.html", message=message)
@@ -131,6 +141,10 @@ def new():
         ingredients.append("")
         return render_template("new_recipe.html", name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     
+    if len(name) > 60 or len(instructions) > 300:
+        message = "Tarkista tekstikenttien pituudet"
+        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+
     if not len(name) > 0:
         message = "Lisää reseptille nimi"
         return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
@@ -236,6 +250,9 @@ def save_recipe():
     instructions = request.form["instructions"]
     if not instructions:
         instructions = old_recipe["instructions"]
+    if len(name) > 60 or len(instructions) > 300:
+        message = "Tarkista tekstikenttien pituudet"
+        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     imagefile = request.files["image"]
     if request.form.get("action") == "Lisää ainesosa":
         ingredients = recipes.ingredients_clean(ingredients)
