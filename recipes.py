@@ -13,12 +13,12 @@ def recipe_name_free(name):
 def get_recipe_by_id(recipe_id):
     recipes = db.query("SELECT * FROM recipes WHERE id=?", [recipe_id])
     recipe = handle_images(recipes)
-    return recipe
+    return recipe if recipe else None
 
 def get_recipe_by_slug(slug):
     recipes = db.query("SELECT * FROM recipes WHERE slug=?", [slug])
     recipe = handle_images(recipes)
-    return recipe
+    return recipe if recipe else None
 
 def get_recipes_by_user(user_id):
     recipes = db.query("SELECT * FROM recipes WHERE user_id=?", [user_id])
@@ -26,7 +26,7 @@ def get_recipes_by_user(user_id):
 
 def get_recipes():
     recipes = db.query("SELECT * FROM recipes",)
-    return handle_images(recipes)
+    return handle_images(recipes) if recipes else None
 
 def handle_images(recipes):
     recipes_with_image = []
@@ -125,7 +125,7 @@ def create_slug(name):
 
 def get_slug(recipe_id):
     slug = db.query("SELECT slug FROM recipes WHERE id = ?", [recipe_id])[0][0]
-    return slug
+    return slug if slug else None
 
 def get_tags():
     return db.query("SELECT * FROM tags",)
