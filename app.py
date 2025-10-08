@@ -117,8 +117,7 @@ def thank_you():
 
 @app.route("/uusi", methods=["POST", "GET"])
 def new():
-    if not session["user_id"]:
-        abort(403)
+    require_login()
     name = request.form["name"]
     name = str(name)
     ingredients = request.form.getlist("ingredient")
@@ -255,6 +254,10 @@ def save_recipe():
     else:
         message = "Lisää reseptille nimi"
         return render_template("edit_recipe.html", slug=slug, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile) 
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
 
 if __name__ == "__main__":
     app.run(debug=True)
