@@ -155,6 +155,8 @@ def new():
 @app.route("/poista/<slug>", methods=["GET", "POST"])
 def remove_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
     if not recipe:
         abort(404)
     if recipe["user_id"] != session["user_id"]:
@@ -173,16 +175,20 @@ def remove_recipe(slug):
 @app.route("/muokkaa/<slug>")
 def edit_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)[0]
+    if recipe["user_id"] != session["user_id"]:
+        abort(403)
     recipe_id = recipe["id"]
     ingredients = recipes.get_ingredients(recipe_id)
     name = recipe["name"]
     instructions = recipe["instructions"]
     imagefile = recipe["image"]
+    tags = recipes.get_tags_by_recipe(recipe_id)
+    all_tags = recipes.get_tags()
     if not recipe:
         abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
-    return render_template("edit_recipe.html", name=name, instructions=instructions, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
+    return render_template("edit_recipe.html", name=name, all_tags=all_tags, instructions=instructions, tags=tags, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
 
 @app.route("/omatreseptit/haku", methods=["GET"])
 def search_own():
