@@ -82,8 +82,9 @@ def add_recipe(name, ingredients, instructions, slug, image):
                 db.execute(sql, [recipe_id, existing_id])
 
 def remove_recipe(recipe_id):
+    db.execute("DELETE FROM recipe_ingredient WHERE recipe_id = ?", [recipe_id])
+    db.execute("DELETE FROM recipe_tag WHERE recipe_id = ?", [recipe_id])
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
-    #Delete also from other tables where references to recipe (recipe_ingredient, recipe_tag)
 
 def update_recipe(name, ingredients, instructions, recipe_id, slug, image):
     sql = "UPDATE recipes SET name = ?, instructions = ?, slug = ?, image = ? WHERE id = ?"
