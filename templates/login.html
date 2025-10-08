@@ -5,10 +5,10 @@
 {% block content %}
 <form action="/kirjaasisaan" method="post">
   <p>Käyttäjänimi
-    <input type="text" name="username" required />
+    <input type="text" name="username" maxlength="20" required />
   </p>
   <p>Salasana
-    <input type="text" name="password" required />
+    <input type="text" name="password" maxlength="30" required />
   </p>
   <p>
     {% if message %}
