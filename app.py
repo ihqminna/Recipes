@@ -107,6 +107,8 @@ def show_recipe(slug):
 
 @app.route("/uusiresepti")
 def new_recipe():
+    if not session["user_id"]:
+        abort(403)
     return render_template("new_recipe.html")
 
 @app.route("/kiitos")
@@ -115,6 +117,8 @@ def thank_you():
 
 @app.route("/uusi", methods=["POST", "GET"])
 def new():
+    if not session["user_id"]:
+        abort(403)
     name = request.form["name"]
     name = str(name)
     ingredients = request.form.getlist("ingredient")
