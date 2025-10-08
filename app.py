@@ -45,6 +45,7 @@ def in_logger():
     
 @app.route("/kirjaaulos")
 def logout():
+    require_login()
     del session["user"]
     del session["user_id"]
     return redirect ("/")
@@ -74,6 +75,7 @@ def new_user():
 
 @app.route("/omatreseptit")
 def own_recipes():
+    require_login()
     if session:
         username = session["user"]
         user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
@@ -96,10 +98,11 @@ def show_tag(slug):
 
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
-    recipe = recipes.get_recipe_by_slug(slug)[0]
+    recipe = recipes.get_recipe_by_slug(slug)
     if not recipe:
         abort(404)
-    print(recipe)
+    else:
+        recipe = recipe[0]
     recipe_id = recipe["id"]
     ingredients = recipes.get_ingredients(recipe_id)
     tags = recipes.get_tags_by_recipe(recipe_id)
@@ -143,7 +146,7 @@ def new():
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
             return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)
         image = imagefile.read()
-        if len(image) > 1024*1024:
+        if len(image) > 1000*1024:
             message = "Liian suuri kuvatiedosto."
             return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)            
     else: image = None
@@ -156,13 +159,14 @@ def new():
     
 @app.route("/poista/<slug>", methods=["GET", "POST"])
 def remove_recipe(slug):
-    recipe = recipes.get_recipe_by_slug(slug)[0]
+    require_login()
+    recipe = recipes.get_recipe_by_slug(slug)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
     if not recipe:
         abort(404)
-    if recipe["user_id"] != session["user_id"]:
-        abort(403)
+    else:
+        recipe = recipe[0]
     
     if request.method == "GET":
         return render_template("remove_recipe.html", recipe=recipe)
@@ -176,9 +180,14 @@ def remove_recipe(slug):
         
 @app.route("/muokkaa/<slug>")
 def edit_recipe(slug):
-    recipe = recipes.get_recipe_by_slug(slug)[0]
+    require_login()
+    recipe = recipes.get_recipe_by_slug(slug)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
+    if recipe:
+        recipe = recipe[0]
+    else:
+        abort(404)
     recipe_id = recipe["id"]
     ingredients = recipes.get_ingredients(recipe_id)
     name = recipe["name"]
@@ -194,6 +203,7 @@ def edit_recipe(slug):
 
 @app.route("/omatreseptit/haku", methods=["GET"])
 def search_own():
+    require_login()
     if session:
         query = request.args.get("query")
         results = recipes.search(query) if query else []
@@ -209,6 +219,7 @@ def search():
 
 @app.route("/tallenna", methods=["POST"])
 def save_recipe():
+    require_login()
     recipe_id = request.form["recipe_id"]
     old_recipe = recipes.get_recipe_by_id(recipe_id)[0]
     slug = recipes.get_slug(recipe_id)
