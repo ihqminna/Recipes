@@ -7,11 +7,20 @@
   <h2>Reseptin nimi</h2>
     <input type="text" maxlength="60" size="30" name="name" value="{{ name }}" />
   <h2>Avainsanat</h2>
-  <select name="tag" id="tag">
+  {% for rtag in tags %}
+  <select name="tag" id="tag" value="{{ rtag }}">
+  <option value="{{ rtag }}"></option>
   {% for tag in all_tags %}
+    {% if tag.name == rtag.name %}
+    <option value="{{ tag.name }}" selected>{{ tag.name }}</option>
+    {% else %}
     <option value="{{ tag.name }}">{{ tag.name }}</option>
+    {% endif %}
   {% endfor %}
   </select>
+  <br>
+  {% endfor %}
+  <input type="submit" name="action" class="secondary_button" value="Lisää avainsana" />
   <h2>Ainesosat</h2>
   {% for i in ingredients %}
   <input type="text" maxlength="20" size="20" name="ingredient" value="{{ i }}" />
