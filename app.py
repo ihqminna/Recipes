@@ -237,7 +237,6 @@ def save_recipe():
     recipe_id = request.form["recipe_id"]
     old_recipe = recipes.get_recipe_by_id(recipe_id)[0]
     slug = recipes.get_slug(recipe_id)
-    tags = recipes.get_tags_by_recipe(recipe_id)
     all_tags = recipes.get_tags()
     if not old_recipe:
         abort(404)
@@ -251,6 +250,7 @@ def save_recipe():
     ingredients = request.form.getlist("ingredient")
     instructions = request.form["instructions"]
     tags = request.form.getlist("tag")
+    tags = recipes.clean_list(tags)
     if not instructions:
         instructions = old_recipe["instructions"]
     if len(name) > 60 or len(instructions) > 300:

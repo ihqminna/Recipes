@@ -103,17 +103,11 @@ def update_recipe(name, ingredients, instructions, recipe_id, slug, image, tags)
             sql = "INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES (?, ?)"
             db.execute(sql, [recipe_id, existing_id])
     if tags:
-        print("Tagit: ", tags)
         tags = clean_list(tags)
-        print("Siistityt tagit: ", tags)
-        old_tags = db.query("SELECT tag_id FROM recipe_tag WHERE recipe_id = ?", [recipe_id])
-        if old_tags:
-            old_tags = old_tags[0]
-            print("Vanhat tagit: ", old_tags)
         for t in tags:
             tag_id = db.query("SELECT id FROM tags WHERE name = ?", [t])[0][0]
-            print("Tagin id: ", tag_id)
-            if tag_id not in old_tags:
+            existing_recipe_tag = db.query("SELECT tag_id FROM recipe_tag WHERE recipe_id = ? AND tag_id = ?", [recipe_id, tag_id])
+            if not existing_recipe_tag:
                 sql = "INSERT INTO recipe_tag (recipe_id, tag_id) VALUES (?, ?)"
                 db.execute(sql, [recipe_id, tag_id])
 
