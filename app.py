@@ -196,12 +196,12 @@ def remove_recipe(slug):
 def edit_recipe(slug):
     require_login()
     recipe = recipes.get_recipe_by_slug(slug)
+    if not recipe:
+        abort(404)
+    else:
+        recipe = recipe[0]
     if recipe["user_id"] != session["user_id"]:
         abort(403)
-    if recipe:
-        recipe = recipe[0]
-    else:
-        abort(404)
     recipe_id = recipe["id"]
     ingredients = recipes.get_ingredients(recipe_id)
     name = recipe["name"]
