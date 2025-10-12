@@ -11,14 +11,14 @@
 * Reseptin voi poistaa.
 * Reseptiä voi muokata.
 * Kuvan lisääminen reseptiin.
+* Reseptiin voi lisätä ainesosia.
+* Avainsanat on listattu erikseen ja niiden perusteella voi selata reseptejä.
 
 ## Tulevat toiminnot
 
-* Reseptiin voi lisätä ainesosia.
 * Reseptisivulla sitä voi kommentoida.
-* Käyttäjäsivu, jossa näkee oman aktiivisuutensa.
+* Käyttäjäsivu, jossa näkee käyttäjän aktiivisuuden.
 * Reseptiin voi lisätä valmiita avainsanoja (kuten "salaatti" ja "vegaaninen").
-* Avainsanat on listattu erikseen ja niiden perusteella voi selata reseptejä.
 
 ## Sovelluksen asennus
 
