@@ -11,21 +11,21 @@ def recipe_name_free(name):
         return True
 
 def get_recipe_by_id(recipe_id):
-    recipes = db.query("SELECT * FROM recipes WHERE id=?", [recipe_id])
+    recipes = db.query("SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image FROM recipes r WHERE id=?", [recipe_id])
     recipe = handle_images(recipes)
     return recipe if recipe else None
 
 def get_recipe_by_slug(slug):
-    recipes = db.query("SELECT * FROM recipes WHERE slug=?", [slug])
+    recipes = db.query("SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image FROM recipes r WHERE slug=?", [slug])
     recipe = handle_images(recipes)
     return recipe if recipe else None
 
 def get_recipes_by_user(user_id):
-    recipes = db.query("SELECT * FROM recipes WHERE user_id=?", [user_id])
+    recipes = db.query("SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image FROM recipes r WHERE user_id=?", [user_id])
     return handle_images(recipes)
 
 def get_recipes():
-    recipes = db.query("SELECT * FROM recipes",)
+    recipes = db.query("SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image FROM recipes r",)
     return handle_images(recipes) if recipes else None
 
 def handle_images(recipes):
@@ -104,7 +104,7 @@ def update_recipe(name, ingredients, instructions, recipe_id, slug, image):
                 db.execute(sql, [recipe_id, existing_id])
 
 def search(query):
-    sql = "SELECT * FROM recipes WHERE instructions LIKE ? OR name LIKE ?"
+    sql = "SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image FROM recipes r WHERE instructions LIKE ? OR name LIKE ?"
     #Add ingredients to search
     return db.query(sql, ["%" + query + "%", "%" + query + "%"])
 
@@ -129,10 +129,10 @@ def get_slug(recipe_id):
     return slug if slug else None
 
 def get_tags():
-    return db.query("SELECT * FROM tags",)
+    return db.query("SELECT t.id, t.name, t.plural, t.slug FROM tags t",)
 
 def get_recipes_by_tag(slug):
-    sql = "SELECT R.* FROM recipes R JOIN recipe_tag RT ON R.id = RT.recipe_id JOIN tags T ON rt.tag_id = t.id WHERE T.slug = ?"
+    sql = "SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image FROM recipes r JOIN recipe_tag RT ON R.id = RT.recipe_id JOIN tags T ON rt.tag_id = t.id WHERE T.slug = ?"
     recipes = db.query(sql, [slug])
     return handle_images(recipes)
 
