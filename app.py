@@ -213,7 +213,7 @@ def edit_recipe(slug):
         abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
-    return render_template("edit_recipe.html", name=name, all_tags=all_tags, instructions=instructions, tags=tags, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
+    return render_template("edit_recipe.html", slug=slug, name=name, all_tags=all_tags, instructions=instructions, tags=tags, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
 
 @app.route("/omatreseptit/haku", methods=["GET"])
 def search_own():
@@ -252,7 +252,7 @@ def save_recipe():
         instructions = old_recipe["instructions"]
     if len(name) > 60 or len(instructions) > 300:
         message = "Tarkista tekstikenttien pituudet"
-        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", slug=slug, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     imagefile = request.files["image"]
     if request.form.get("action") == "Lisää ainesosa":
         ingredients = recipes.ingredients_clean(ingredients)
@@ -273,7 +273,7 @@ def save_recipe():
     if len(name) > 0:
         if name != old_name and not recipes.recipe_name_free(name):
             return "Reseptin nimi on jo käytössä"
-            return render_template("edit_recipe.html", recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+            return render_template("edit_recipe.html", slug=slug, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
         else:    
             slug = recipes.create_slug(name)
             recipes.update_recipe(name, ingredients, instructions, recipe_id, slug, image)
