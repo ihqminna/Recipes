@@ -169,3 +169,8 @@ def get_ingredients(recipe_id):
 def get_user_id(user):
     sql = "SELECT id FROM users WHERE username = ?"
     return db.query(sql, [user])
+
+def get_username(user_id):
+    sql = "SELECT username FROM users WHERE id = ?"
+    username = db.query(sql, [user_id])
+    return username[0][0] if username else None
