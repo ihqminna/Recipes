@@ -103,9 +103,8 @@ def update_recipe(name, ingredients, instructions, recipe_id, slug, image, tags)
             sql = "INSERT INTO recipe_ingredient (recipe_id, ingredient_id) VALUES (?, ?)"
             db.execute(sql, [recipe_id, existing_id])
     if tags:
-        tags = clean_list(tags)
         for t in tags:
-            tag_id = db.query("SELECT id FROM tags WHERE name = ?", [t])[0][0]
+            tag_id = t[0]
             existing_recipe_tag = db.query("SELECT tag_id FROM recipe_tag WHERE recipe_id = ? AND tag_id = ?", [recipe_id, tag_id])
             if not existing_recipe_tag:
                 sql = "INSERT INTO recipe_tag (recipe_id, tag_id) VALUES (?, ?)"
@@ -136,7 +135,7 @@ def get_slug(recipe_id):
     slug = db.query("SELECT slug FROM recipes WHERE id = ?", [recipe_id])[0][0]
     return slug if slug else None
 
-def get_tags():
+def get_recipes_tags():
     return db.query("SELECT t.id, t.name, t.plural, t.slug FROM tags t",)
 
 def get_recipes_by_tag(slug):
@@ -174,3 +173,13 @@ def get_username(user_id):
     sql = "SELECT username FROM users WHERE id = ?"
     username = db.query(sql, [user_id])
     return username[0][0] if username else None
+
+def handle_tags(tags):
+    tags = clean_list(tags)
+    full_tags = []
+    for t in tags:
+        tag_name = t
+        sql = "SELECT t.id, t.name, t.plural, t.slug FROM tags t WHERE name = ?"
+        tag = db.query(sql, [tag_name])[0]
+        full_tags.append(tag)
+    return full_tags

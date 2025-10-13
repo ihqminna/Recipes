@@ -97,7 +97,7 @@ def own_recipes():
 
 @app.route("/avainsanat")
 def keywords():
-    tags = recipes.get_tags()
+    tags = recipes.get_recipes_tags()
     return render_template("keywords.html", tags=tags)
 
 @app.route("/avainsanat/<slug>")
@@ -219,7 +219,8 @@ def edit_recipe(slug):
     instructions = recipe["instructions"]
     imagefile = recipe["image"]
     tags = recipes.get_tags_by_recipe(recipe_id)
-    all_tags = recipes.get_tags()
+    print(tags)
+    all_tags = recipes.get_recipes_tags()
     if not recipe:
         abort(404)
     if recipe["user_id"] != session["user_id"]:
@@ -248,7 +249,7 @@ def save_recipe():
     recipe_id = request.form["recipe_id"]
     old_recipe = recipes.get_recipe_by_id(recipe_id)[0]
     slug = recipes.get_slug(recipe_id)
-    all_tags = recipes.get_tags()
+    all_tags = recipes.get_recipes_tags()
     if not old_recipe:
         abort(404)
     if old_recipe["user_id"] != session["user_id"]:
@@ -261,7 +262,10 @@ def save_recipe():
     ingredients = request.form.getlist("ingredient")
     instructions = request.form["instructions"]
     tags = request.form.getlist("tag")
-    tags = recipes.clean_list(tags)
+    print(tags)
+    tags = recipes.handle_tags(tags)
+    print(tags)
+    print(tags[0]["name"])
     if not instructions:
         instructions = old_recipe["instructions"]
     if len(name) > 60 or len(instructions) > 300:
@@ -273,7 +277,6 @@ def save_recipe():
         ingredients.append("")
         return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     if request.form.get("action") == "Lisää avainsana":
-        tags = recipes.clean_list(tags)
         tags.append("")
         return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     if imagefile:

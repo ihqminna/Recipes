@@ -8,8 +8,8 @@
     <input type="text" maxlength="60" size="30" name="name" value="{{ name }}" />
   <h2>Avainsanat</h2>
   {% for rtag in tags %}
-  <select name="tag" id="tag" value="{{ rtag }}">
-  <option value="{{ rtag }}"></option>
+  <select name="tag" id="tag">
+  <option value="{{ rtag.name }}"></option>
   {% for tag in all_tags %}
     {% if tag.name == rtag.name %}
     <option value="{{ tag.name }}" selected>{{ tag.name }}</option>
