@@ -5,7 +5,7 @@
 {% block content %}
 <div style="display: flex; width: 100%">
   <div style="max-width: 600px; min-width: 300px; margin: 8px">
-    <h2>Tekijä: {{ username }}</h2>
+    <h2>Tekijä: <a style="text-decoration:underline;" href="/{{ username }}">{{ username }}</a></h2>
     {% for t in tags %}
     <p>{{ t.name }}</p>
     {% endfor %}
