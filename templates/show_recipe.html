@@ -10,13 +10,22 @@
     <p>{{ t.name }}</p>
     {% endfor %}
     <h2>Ainesosat</h2>
+    {% if ingredients %}
     <ul>
       {% for i in ingredients %}
       <li>{{ i }}</li>
       {% endfor %}
     </ul>
+    {% else %}
+    <p>-</p>
+    {% endif %}
     <h2>Ohje</h2>
+    {% if recipe.instructions %}
     <p>{{ recipe.instructions }}</p>
+    {% else %}
+    <p>-</p>
+    {% endif %}
+    <br>
     {% if session.user_id == recipe.user_id %}
     <a class="secondary_button" href="/muokkaa/{{ recipe.slug }}">Muokkaa reseptiä</a>
     <a class="secondary_button" href="/poista/{{ recipe.slug }}">Poista resepti</a>
