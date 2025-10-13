@@ -165,3 +165,7 @@ def get_ingredients(recipe_id):
     for i in ingredients:
         ingredient_names.append(i[0])
     return ingredient_names
+
+def get_user_id(user):
+    sql = "SELECT id FROM users WHERE username = ?"
+    return db.query(sql, [user])

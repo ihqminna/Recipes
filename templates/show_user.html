@@ -1,0 +1,27 @@
+{% extends "recipe_list.html" %}
+
+{% set title = username %}
+
+{% block content %}
+<p>Käyttäjä {{ username }} on lisännyt yhteensä {{ recipes | length }} reseptiä ja xx kommenttia.</p>
+{% if recipes %}
+<br>
+<h2>Käyttäjän {{ username }} reseptit</h2>
+<div class="recipe_list">
+  {% for recipe in recipes %}
+  <div class="recipe_list_item">
+    <a href="/resepti/{{ recipe.slug }}">
+      {% if recipe.image %}
+      <img src="data:image/jpeg;base64,{{ recipe['image'] }}" class="recipe_list_image" alt="recipe.name">
+      {% else %}
+      <img class="recipe_list_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
+      {% endif %}
+      <h2 class="recipe_list_name">
+        {{ recipe.name }}
+      </h2>
+    </a>
+  </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

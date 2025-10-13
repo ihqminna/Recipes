@@ -106,6 +106,16 @@ def show_tag(slug):
     plural = recipes.get_tag_plural(slug)
     return render_template("show_keyword.html", recipes=recipe_list, plural=plural)
 
+@app.route("/<user>")
+def show_user(user):
+    user_id = recipes.get_user_id(user)
+    if user_id:
+        user_id = user_id[0][0]
+        recipe_list = recipes.get_recipes_by_user(user_id)
+        return render_template("show_user.html", username=user, recipes=recipe_list)
+    else:
+        abort(404)
+
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)
