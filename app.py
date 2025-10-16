@@ -153,41 +153,46 @@ def new():
     name = str(name)
     ingredients = request.form.getlist("ingredient")
     instructions = request.form["instructions"]
+    tags = request.form.getlist("tag")
+    tags = recipes.handle_tags(tags)
+    all_tags = recipes.get_recipes_tags()
     imagefile = request.files["image"]
+
+    if not len(name) > 0:
+        message = "Lisää reseptille nimi"
+        return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+    if not recipes.recipe_name_free(name):
+        message = "Reseptin nimi on jo käytössä"
+        return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+    slug = recipes.create_slug(name)
 
     if request.form.get("action") == "Lisää ainesosa":
         ingredients = recipes.clean_list(ingredients)
         ingredients.append("")
-        return render_template("new_recipe.html", name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     
+    if request.form.get("action") == "Lisää avainsana":
+        tags.append("")
+        return render_template("new_recipe.html", slug=slug, all_tags=all_tags, tags=tags, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+
     if len(name) > 60 or len(instructions) > 300:
         message = "Tarkista tekstikenttien pituudet"
-        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
 
-    if not len(name) > 0:
-        message = "Lisää reseptille nimi"
-        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
-    if not recipes.recipe_name_free(name):
-        message = "Reseptin nimi on jo käytössä"
-        return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
-    slug = recipes.create_slug(name)
     if imagefile:
         if imagefile.filename == "":
             message = "Lisää kuvatiedostolle nimi."
-            return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)
+            return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)
         elif not imagefile.filename.endswith(".jpg"):
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
-            return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)
+            return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)
         image = imagefile.read()
         if len(image) > 1000*1024:
             message = "Liian suuri kuvatiedosto."
-            return render_template("new_recipe.html", message=message, name=name, ingredients=ingredients, instructions=instructions)            
+            return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)            
     else: image = None
-    if session:
-        username = session["user"]
-        recipes.add_recipe_by_user(name, ingredients, instructions, slug, username, image)
-    else:
-        recipes.add_recipe(name, ingredients, instructions, slug, image)
+    username = session["user"]
+    recipes.add_recipe_by_user(name, tags, ingredients, instructions, slug, username, image)
     return redirect("/kiitos")
     
 @app.route("/poista/<slug>", methods=["GET", "POST"])
@@ -227,7 +232,6 @@ def edit_recipe(slug):
     instructions = recipe["instructions"]
     imagefile = recipe["image"]
     tags = recipes.get_tags_by_recipe(recipe_id)
-    print(tags)
     all_tags = recipes.get_recipes_tags()
     if not recipe:
         abort(404)
@@ -260,10 +264,7 @@ def save_recipe():
     ingredients = request.form.getlist("ingredient")
     instructions = request.form["instructions"]
     tags = request.form.getlist("tag")
-    print(tags)
     tags = recipes.handle_tags(tags)
-    print(tags)
-    print(tags[0]["name"])
     if not instructions:
         instructions = old_recipe["instructions"]
     if len(name) > 60 or len(instructions) > 300:
