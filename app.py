@@ -13,8 +13,11 @@ app.secret_key = config.secret_key
 @app.route("/")
 def index():
     all_recipes = recipes.get_recipes()
-    recipes_count = len(all_recipes)
-    return render_template("index.html", count=recipes_count, recipes=all_recipes)
+    if all_recipes:
+        recipes_count = len(all_recipes)
+        return render_template("index.html", count=recipes_count, recipes=all_recipes)
+    else:
+        return render_template("index.html")
 
 @app.route("/kirjaudu")
 def login():
@@ -42,7 +45,8 @@ def in_logger():
     if check_password_hash(password_hash, password):
         session["user"] = username
         session["user_id"] = user["id"]
-        return redirect("/omatreseptit")
+        url = "/" + username
+        return redirect(url)
     else:
         message =  "Väärä käyttäjätunnus tai salasana"
         return render_template("login.html", message=message)
@@ -83,18 +87,6 @@ def new_user():
 
     return redirect("/kirjaudu")
 
-@app.route("/omatreseptit")
-def own_recipes():
-    require_login()
-    if session:
-        username = session["user"]
-        user_id = db.query("SELECT id FROM users WHERE username = ?", [username])[0][0]
-        own_recipes = recipes.get_recipes_by_user(user_id)
-        recipes_count = len(own_recipes)
-        return render_template("own_recipes.html", count=recipes_count, recipes=own_recipes)
-    else:
-        return render_template("/kirjaudu")
-
 @app.route("/avainsanat")
 def keywords():
     tags = recipes.get_recipes_tags()
@@ -108,13 +100,29 @@ def show_tag(slug):
 
 @app.route("/<user>")
 def show_user(user):
+    require_login()
     user_id = recipes.get_user_id(user)
-    if user_id:
+    if user_id and session:
+        sessionuser = session["user"]
         user_id = user_id[0][0]
         recipe_list = recipes.get_recipes_by_user(user_id)
-        return render_template("show_user.html", username=user, recipes=recipe_list)
+        return render_template("show_user.html", username=user, recipes=recipe_list, sessionuser=sessionuser)
     else:
         abort(404)
+
+@app.route("/<user>/haku", methods=["GET"])
+def search_user(user):
+    require_login()
+    user_id = recipes.get_user_id(user)
+    if session and user_id:
+        user_id = user_id[0][0]
+        sessionuser = session["user"]
+        query = request.args.get("query")
+        results = recipes.search(query) if query else []
+        recipe_list = recipes.get_recipes_by_user(user_id)
+        return render_template("show_user.html", query=query, username=user, recipes=recipe_list, results=results, sessionuser=sessionuser)
+    else:
+        return render_template("/kirjaudu")
 
 @app.route("/resepti/<slug>")
 def show_recipe(slug):
@@ -226,16 +234,6 @@ def edit_recipe(slug):
     if recipe["user_id"] != session["user_id"]:
         abort(403)
     return render_template("edit_recipe.html", slug=slug, name=name, all_tags=all_tags, instructions=instructions, tags=tags, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
-
-@app.route("/omatreseptit/haku", methods=["GET"])
-def search_own():
-    require_login()
-    if session:
-        query = request.args.get("query")
-        results = recipes.search(query) if query else []
-        return render_template("own_recipes.html", query=query, results=results)
-    else:
-        return render_template("/kirjaudu")
 
 @app.route("/haku", methods=["GET"])
 def search():

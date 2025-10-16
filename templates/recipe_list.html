@@ -2,7 +2,9 @@
 
 {% block content %}
 <div class="recipe_list">
-  {% if query %}
+  {% if query and not results %}
+  <p>Haulla ei löytynyt tuloksia.</p>
+  {% elif query %}
   {% for result in results %}
   <div class="recipe_list_item">
     <a href="/resepti/{{ result.slug }}">

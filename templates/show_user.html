@@ -4,24 +4,24 @@
 
 {% block content %}
 <p>Käyttäjä {{ username }} on lisännyt yhteensä {{ recipes | length }} reseptiä ja xx kommenttia.</p>
-{% if recipes %}
 <br>
 <h2>Käyttäjän {{ username }} reseptit</h2>
-<div class="recipe_list">
-  {% for recipe in recipes %}
-  <div class="recipe_list_item">
-    <a href="/resepti/{{ recipe.slug }}">
-      {% if recipe.image %}
-      <img src="data:image/jpeg;base64,{{ recipe['image'] }}" class="recipe_list_image" alt="recipe.name">
-      {% else %}
-      <img class="recipe_list_image" src="/static/default.jpg" alt="Yleinen reseptikuva">
-      {% endif %}
-      <h2 class="recipe_list_name">
-        {{ recipe.name }}
-      </h2>
-    </a>
+{% if recipes %}
+<form action="/{{ username }}/haku" method="get">
+  <p>
+    Hakusana:
+    {% if query %}
+    <input type="text" name="query" value="{{ query }}" required />
+    {% else %}
+    <input type="text" name="query" required />
+    {% endif %}
+  </p>
+  <input type="submit" class="secondary_button" value="Hae reseptejä" />
+</form>
+{% elif username == sessionuser %}
+  <div style="margin-top: 36px">
+    <a href="/uusiresepti" class="secondary_button">Lisää resepti</a>
   </div>
-  {% endfor %}
-  {% endif %}
-</div>
+{% endif %}
+{{ super() }}
 {% endblock %}
