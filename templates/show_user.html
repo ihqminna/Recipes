@@ -13,11 +13,11 @@
 {% if recipes %}
 <form action="/{{ username }}/haku" method="get">
   <p>
-    Hakusana:
+    <label for="query">Hakusana:</label><br>
     {% if query %}
-    <input type="text" name="query" value="{{ query }}" required />
+    <input id="query" type="text" name="query" value="{{ query }}" required />
     {% else %}
-    <input type="text" name="query" required />
+    <input id="query" type="text" name="query" required />
     {% endif %}
   </p>
   <input type="submit" class="secondary_button" value="Hae reseptejä" />

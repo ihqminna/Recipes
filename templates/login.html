@@ -4,11 +4,11 @@
 
 {% block content %}
 <form action="/kirjaasisaan" method="post">
-  <p>Käyttäjänimi
-    <input type="text" name="username" value="{{ filled.username }}" maxlength="20" required />
+  <p><label for="username">Käyttäjänimi</label><br>
+    <input type="text" id="username" name="username" value="{{ filled.username }}" maxlength="20" required />
   </p>
-  <p>Salasana
-    <input type="text" name="password" maxlength="30" required />
+  <p><label for="password">Salasana</label><br>
+    <input id="password" type="text" name="password" maxlength="30" required />
   </p>
   <p>
     {% if message %}

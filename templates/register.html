@@ -4,14 +4,14 @@
 
 {% block content %}
 <form action="/uusikayttaja" method="post">
-  <p>Käyttäjänimi
-    <input type="text" name="username" maxlength="20" value="{{ filled.username }}" required />
+  <p><label for="username">Käyttäjänimi</label><br>
+    <input id="username" type="text" name="username" maxlength="20" value="{{ filled.username }}" required />
   </p>
-  <p>Salasana
-    <input type="text" name="password1" maxlength="30" required />
+  <p><label for="password1">Salasana</label><br>
+    <input id="password1" type="text" name="password1" maxlength="30" required />
   </p>
-  <p>Salasana uudelleen
-    <input type="text" name="password2" maxlength="30" required />
+  <p><label for="password2">Salasana uudelleen</label><br>
+    <input id="password2" type="text" name="password2" maxlength="30" required />
   </p>
   {% if message %}
   <p><strong>{{ message }}</strong></p>
