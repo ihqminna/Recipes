@@ -99,9 +99,28 @@ def update_recipe(name, ingredients, instructions, recipe_id, slug, image, tags)
                 db.execute(sql, [recipe_id, tag_id])
 
 def search(query):
-    sql = "SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image FROM recipes r WHERE instructions LIKE ? OR name LIKE ?"
-    #Add ingredients to search
-    return db.query(sql, ["%" + query + "%", "%" + query + "%"])
+    sql = """
+    SELECT DISTINCT r.id, r.name, r.instructions, r.user_id, r.slug, r.image 
+    FROM recipes r
+    LEFT JOIN recipe_tag rt ON r.id = rt.recipe_id
+    LEFT JOIN tags t ON rt.tag_id = t.id
+    LEFT JOIN recipe_ingredient ri ON r.id = ri.recipe_id
+    LEFT JOIN ingredients i ON ri.ingredient_id = i.id
+    WHERE r.name LIKE ? OR r.instructions LIKE ? OR t.name LIKE ? or i.name LIKE ?
+    """
+    return db.query(sql, ["%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"])
+
+def search_by_user(query, user_id):
+    sql = """
+    SELECT DISTINCT r.id, r.name, r.instructions, r.user_id, r.slug, r.image 
+    FROM recipes r
+    LEFT JOIN recipe_tag rt ON r.id = rt.recipe_id
+    LEFT JOIN tags t ON rt.tag_id = t.id
+    LEFT JOIN recipe_ingredient ri ON r.id = ri.recipe_id
+    LEFT JOIN ingredients i ON ri.ingredient_id = i.id
+    WHERE r.user_id = ? AND (r.name LIKE ? OR r.instructions LIKE ? OR t.name LIKE ? or i.name LIKE ?)
+    """
+    return db.query(sql, [user_id, "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"])
 
 def create_slug(name):
     slug = ""

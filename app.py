@@ -118,7 +118,10 @@ def search_user(user):
         user_id = user_id[0][0]
         sessionuser = session["user"]
         query = request.args.get("query")
-        results = recipes.search(query) if query else []
+        if query:
+            results = recipes.search_by_user(query, user_id)
+        else:
+            results = []
         recipe_list = recipes.get_recipes_by_user(user_id)
         return render_template("show_user.html", query=query, username=user, recipes=recipe_list, results=results, sessionuser=sessionuser)
     else:
