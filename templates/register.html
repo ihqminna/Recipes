@@ -14,7 +14,7 @@
     <input id="password2" type="text" name="password2" maxlength="30" required />
   </p>
   {% if message %}
-  <p><strong>{{ message }}</strong></p>
+  <p class="error">{{ message }}</p>
   {% endif %}
   <input type="submit" class="primary_button" value="Lisää käyttäjä" />
 </form>

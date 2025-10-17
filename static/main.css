@@ -147,6 +147,12 @@ body{
     padding: 4px 4px 0px 4px;
   }
 
+  .error{
+    color: #770303;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
   .sidebar > img{
     width: 48px;
     margin: 4px;

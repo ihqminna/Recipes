@@ -10,11 +10,9 @@
   <p><label for="password">Salasana</label><br>
     <input id="password" type="text" name="password" maxlength="30" required />
   </p>
-  <p>
-    {% if message %}
-    <strong>{{ message }}</strong>
-    {% endif %}
-  </p>
+  {% if message %}
+  <p class="error">{{ message }}</p>
+  {% endif %}
   <input type="submit" class="primary_button" value="Kirjaudu sisään" />
 </form>
 <h2>Etkö ole vielä käyttäjä?</h2>

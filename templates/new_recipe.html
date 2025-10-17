@@ -4,7 +4,7 @@
 
 {% block content %}
 {% if message %}
-<p><strong>{{ message }}</strong></p>
+<p class="error">{{ message }}</p>
 {% endif %}
 <form action="/uusi" method="post" enctype="multipart/form-data">
   <h2><label for="name">Reseptin nimi:</label></h2>
@@ -36,7 +36,7 @@
   <h2><label for="image">Reseptin kuva:</label></h2>
     <input type="file" class="secondary_button" name="image" id="image" accept=".jpg" value="{{ imagefile }}" />
   {% if message %}
-  <p><strong>{{ message }}</strong></p>
+  <p class="error">{{ message }}</p>
   {% endif %}
   <p></p>
   <input type="submit" name="action" class="primary_button" value="Tallenna resepti" />
