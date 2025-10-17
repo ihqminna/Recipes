@@ -5,7 +5,7 @@
 {% block content %}
 <form action="/uusikayttaja" method="post">
   <p>Käyttäjänimi
-    <input type="text" name="username" maxlength="20" required />
+    <input type="text" name="username" maxlength="20" value="{{ filled.username }}" required />
   </p>
   <p>Salasana
     <input type="text" name="password1" maxlength="30" required />

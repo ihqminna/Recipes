@@ -21,36 +21,43 @@ def index():
 
 @app.route("/kirjaudu")
 def login():
-    return render_template("login.html")
+    return render_template("login.html", filled=[])
 
-@app.route("/kirjaasisaan", methods=["POST"])
+@app.route("/kirjaasisaan", methods=["GET", "POST"])
 def in_logger():
-    username = request.form["username"]
-    password = request.form["password"]
-    
-    if not username or not password or len(username) > 20 or len(password) > 30:
-        message =  "Väärä käyttäjätunnus tai salasana"
-        return render_template("login.html", message=message)
+    if request.method == "GET":
+        return render_template("login.html", filled={})
 
-    sql = "SELECT * FROM users WHERE username = ?"
-    user_query = db.query(sql, [username])
-    if not user_query:
-        message =  "Väärä käyttäjätunnus tai salasana"
-        return render_template("login.html", message=message) 
-    else:
-        user = user_query[0] 
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        
+        if not username or not password or len(username) > 20 or len(password) > 30:
+            message =  "Väärä käyttäjätunnus tai salasana"
+            filled = {"username": username}
+            return render_template("login.html", message=message, filled=filled)
 
-    password_hash = user["password_hash"]
+        sql = "SELECT * FROM users WHERE username = ?"
+        user_query = db.query(sql, [username])
+        if not user_query:
+            filled = {"username": username}
+            message =  "Väärä käyttäjätunnus tai salasana"
+            return render_template("login.html", message=message, filled=filled) 
+        else:
+            user = user_query[0] 
 
-    if check_password_hash(password_hash, password):
-        session["user"] = username
-        session["user_id"] = user["id"]
-        url = "/" + username
-        return redirect(url)
-    else:
-        message =  "Väärä käyttäjätunnus tai salasana"
-        return render_template("login.html", message=message)
-    
+        password_hash = user["password_hash"]
+
+        if check_password_hash(password_hash, password):
+            session["user"] = username
+            session["user_id"] = user["id"]
+            url = "/" + username
+            return redirect(url)
+        else:
+            filled = {"username": username}
+            message =  "Väärä käyttäjätunnus tai salasana"
+            return render_template("login.html", message=message, filled=filled)
+        
 @app.route("/kirjaaulos")
 def logout():
     require_login()
@@ -60,32 +67,39 @@ def logout():
 
 @app.route("/rekisteroidy")
 def register():
-    return render_template("register.html")
+    return render_template("register.html", filled=[])
 
-@app.route("/uusikayttaja", methods=["POST"])
+@app.route("/uusikayttaja", methods=["GET", "POST"])
 def new_user():
-    username = request.form["username"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
-    if not username or not password1 or not password2:
-        message = "Täytäthän käyttäjätunnuksen ja molemmat salasanat"
-        return render_template("register.html", message=message)
-    elif len(username) > 20 or len(password1) > 30 or len(password2) > 30:
-        message =  "Liian pitkä käyttäjätunnus tai salasana"
-        return render_template("login.html", message=message)
-    if password1 != password2:
-        message = "Salasanat eivät täsmää"
-        return render_template("register.html", message=message)
-    password_hash = generate_password_hash(password1)
+    if request.method == "GET":
+        return render_template("login.html", filled={})
 
-    try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
-    except sqlite3.IntegrityError:
-        message = "Käyttäjätunnus on varattu, käytä toista käyttäjätunnusta"
-        return render_template("register.html", message=message)
+    if request.method == "POST":
+        username = request.form["username"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
+        if not username or not password1 or not password2:
+            filled = {"username": username}
+            message = "Täytäthän käyttäjätunnuksen ja molemmat salasanat"
+            return render_template("register.html", message=message, filled=filled)
+        elif len(username) > 20 or len(password1) > 30 or len(password2) > 30:
+            filled = {"username": username}
+            message =  "Liian pitkä käyttäjätunnus tai salasana"
+            return render_template("login.html", message=message, filled=filled)
+        if password1 != password2:
+            filled = {"username": username}
+            message = "Salasanat eivät täsmää"
+            return render_template("register.html", message=message, filled=filled)
+        password_hash = generate_password_hash(password1)
 
-    return redirect("/kirjaudu")
+        try:
+            sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+            db.execute(sql, [username, password_hash])
+        except sqlite3.IntegrityError:
+            message = "Käyttäjätunnus on varattu, käytä toista käyttäjätunnusta"
+            return render_template("register.html", message=message)
+
+        return redirect("/kirjaudu")
 
 @app.route("/avainsanat")
 def keywords():
