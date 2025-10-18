@@ -6,6 +6,7 @@ from werkzeug.security import check_password_hash
 import config
 import db
 import recipes
+import comments
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -116,10 +117,10 @@ def show_tag(slug):
 def show_user(user):
     require_login()
     user_id = recipes.get_user_id(user)
-    comment_list = comments.get_comments_by_user(user_id)
     if user_id and session:
         sessionuser = session["user"]
         user_id = user_id[0][0]
+        comment_list = comments.get_comments_by_user(user_id)
         recipe_list = recipes.get_recipes_by_user(user_id)
         return render_template("show_user.html", username=user, recipes=recipe_list, comments=comment_list, sessionuser=sessionuser)
     else:
@@ -131,6 +132,7 @@ def search_user(user):
     user_id = recipes.get_user_id(user)
     if session and user_id:
         user_id = user_id[0][0]
+        comment_list = comments.get_comments_by_user(user_id)
         sessionuser = session["user"]
         query = request.args.get("query")
         if query:
@@ -138,7 +140,7 @@ def search_user(user):
         else:
             results = []
         recipe_list = recipes.get_recipes_by_user(user_id)
-        return render_template("show_user.html", query=query, username=user, recipes=recipe_list, results=results, sessionuser=sessionuser)
+        return render_template("show_user.html", query=query, username=user, recipes=recipe_list, results=results, comments=comment_list, sessionuser=sessionuser)
     else:
         return render_template("/kirjaudu")
 
