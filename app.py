@@ -116,11 +116,12 @@ def show_tag(slug):
 def show_user(user):
     require_login()
     user_id = recipes.get_user_id(user)
+    comment_list = comments.get_comments_by_user(user_id)
     if user_id and session:
         sessionuser = session["user"]
         user_id = user_id[0][0]
         recipe_list = recipes.get_recipes_by_user(user_id)
-        return render_template("show_user.html", username=user, recipes=recipe_list, sessionuser=sessionuser)
+        return render_template("show_user.html", username=user, recipes=recipe_list, comments=comment_list, sessionuser=sessionuser)
     else:
         abort(404)
 

@@ -6,7 +6,7 @@
 {% if username == sessionuser %}
 <p>Olet lisännyt yhteensä {{ recipes | length }} reseptiä ja xx kommenttia.</p>
 {% else %}
-<p>Käyttäjä {{ username }} on lisännyt yhteensä {{ recipes | length }} reseptiä ja xx kommenttia.</p>
+<p>Käyttäjä {{ username }} on lisännyt yhteensä {{ recipes | length }} reseptiä ja {{ comments | length }} kommenttia.</p>
 {% endif %}
 <br>
 <h2>Käyttäjän {{ username }} reseptit</h2>
