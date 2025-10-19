@@ -13,12 +13,6 @@ CREATE TABLE recipes (
     image BLOB
 );
 
-CREATE TABLE visits (
-    id INTEGER PRIMARY KEY,
-    visited_at TEXT,
-    user_id INTEGER REFERENCES users
-);
-
 CREATE TABLE tags (
     id INTEGER PRIMARY KEY,
     name TEXT,
