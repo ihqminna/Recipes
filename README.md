@@ -85,4 +85,12 @@ elapsed time: 0.01 s
 elapsed time: 0.0 s
 127.0.0.1 - - [19/Oct/2025 23:45:31] "GET /static/default.jpg HTTP/1.1" 304 -
 
-
+Luodaan vielä avainsanojen perusteella indeksi, jotta reseptien hakemista saadaan vielä tehostettua. Tietokannan rakenteesta johtuen, vaikutus indeksoinnilla ei tässä tapauksessa ollut kuitenkaan suuri:
+elapsed time: 0.11 s
+127.0.0.1 - - [19/Oct/2025 23:54:02] "GET /1 HTTP/1.1" 200 -
+elapsed time: 0.0 s
+127.0.0.1 - - [19/Oct/2025 23:54:02] "GET /static/main.css HTTP/1.1" 304 -
+elapsed time: 0.0 s
+127.0.0.1 - - [19/Oct/2025 23:54:02] "GET /static/eggplant.png HTTP/1.1" 304 -
+elapsed time: 0.0 s
+127.0.0.1 - - [19/Oct/2025 23:54:02] "GET /static/default.jpg HTTP/1.1" 304 -

@@ -45,3 +45,7 @@ CREATE TABLE comments (
     comment TEXT,
     sent_at TEXT
 );
+
+CREATE INDEX idx_recipe_tag_tag_id ON recipe_tag(tag_id);
+
+CREATE INDEX idx_tags_slug ON tags(slug);

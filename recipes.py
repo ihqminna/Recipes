@@ -237,8 +237,8 @@ def get_recipes_paged_by_tag(slug, page, page_size):
     sql = """
     SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image
     FROM recipes r
-    JOIN recipe_tag RT ON R.id = RT.recipe_id
-    JOIN tags T ON rt.tag_id = t.id
+    JOIN recipe_tag AS rt ON r.id = rt.recipe_id
+    JOIN tags AS t ON rt.tag_id = t.id
     WHERE T.slug = ?
     LIMIT ? OFFSET ?
     """
