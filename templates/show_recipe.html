@@ -38,8 +38,8 @@
     {% endif %}
   </div>
 </div>
-{% if comments %}
 <h2>Kommentit</h2>
+{% if comments %}
 <div class="comments">
   {% for comment in comments %}
     <div class="comment">
@@ -52,10 +52,15 @@
     </div>
   {% endfor %}
 </div>
+{% else %}
+<p>Ei vielä kommentteja.</p>
 {% endif %}
 {% if session %}
 <form method="post">
   <h2><label for="comment">Lisää kommentti</label></h2>
+  {% if message %}
+    <p>{{ message }}</p>
+  {% endif%}
   <textarea id="comment" type="textarea" cols="40" size="240" rows="6" name="comment" value="{{ comment }}"></textarea><br>
   <input type="submit" name="action" class="secondary_button" value="Lisää kommentti" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

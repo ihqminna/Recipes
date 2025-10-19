@@ -154,16 +154,21 @@ def show_recipe(slug):
     username = recipes.get_username(recipe["user_id"])
     ingredients = recipes.get_ingredients(recipe_id)
     tags = recipes.get_tags_by_recipe(recipe_id)
+    message = ""
 
     if request.form.get("action") == "Lisää kommentti":
         csrf_token = request.form["csrf_token"]
         check_csrf(csrf_token)
         comment = request.form["comment"]
-        user_id = session["user_id"]
-        comments.add_comment(user_id, recipe_id, comment)
+        if not comment:
+            message = "Kirjoita nyt jotain!"
+        else:
+            user_id = session["user_id"]
+            message = "Kiitos kommentistasi!"
+            comments.add_comment(user_id, recipe_id, comment)
 
     comment_list = comments.get_comments_by_recipe(recipe_id)
-    return render_template("show_recipe.html", username=username, session=session, recipe=recipe, ingredients=ingredients, tags=tags, comments=comment_list)
+    return render_template("show_recipe.html", username=username, session=session, message=message, recipe=recipe, ingredients=ingredients, tags=tags, comments=comment_list)
 
 @app.route("/uusiresepti")
 def new_recipe():
