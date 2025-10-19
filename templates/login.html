@@ -13,6 +13,11 @@
   {% if message %}
   <p class="error">{{ message }}</p>
   {% endif %}
+  {% if next_page %}
+  <input type="hidden" name="next_page" value="{{ next_page }}" />
+  {% else %}
+  <input type="hidden" name="next_page" value="/" />
+  {% endif %}
   <input type="submit" class="primary_button" value="Kirjaudu sisään" />
 </form>
 <h2>Etkö ole vielä käyttäjä?</h2>

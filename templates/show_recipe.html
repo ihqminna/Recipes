@@ -65,5 +65,7 @@
   <input type="submit" name="action" class="secondary_button" value="Lisää kommentti" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
+{% else %}
+<a class="secondary_button" href="/kirjaudu">Kirjaudu kommentoidaksesi</a>
 {% endif %}
 {% endblock %}

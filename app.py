@@ -20,28 +20,29 @@ def index():
 
 @app.route("/kirjaudu")
 def login():
-    return render_template("login.html", filled=[], session=session)
+    return render_template("login.html", filled=[], session=session, next_page=request.referrer)
 
 @app.route("/kirjaasisaan", methods=["GET", "POST"])
 def in_logger():
     if request.method == "GET":
-        return render_template("login.html", filled={}, session=session)
+        return render_template("login.html", filled={}, session=session, next_page=request.referrer)
 
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        next_page = request.form["next_page"]
         
         if not username or not password or len(username) > 20 or len(password) > 30:
             message =  "Väärä käyttäjätunnus tai salasana"
             filled = {"username": username}
-            return render_template("login.html", message=message, filled=filled)
+            return render_template("login.html", message=message, filled=filled, next_page=next_page)
 
         sql = "SELECT * FROM users WHERE username = ?"
         user_query = db.query(sql, [username])
         if not user_query:
             filled = {"username": username}
             message =  "Väärä käyttäjätunnus tai salasana"
-            return render_template("login.html", message=message, filled=filled) 
+            return render_template("login.html", message=message, filled=filled, next_page=next_page) 
         else:
             user = user_query[0] 
 
@@ -51,18 +52,18 @@ def in_logger():
             session["user"] = username
             session["user_id"] = user["id"]
             session["csrf_token"] = secrets.token_hex(16)
-            url = "/" + username
-            return redirect(url)
+            return redirect(next_page)
         else:
             filled = {"username": username}
             message =  "Väärä käyttäjätunnus tai salasana"
-            return render_template("login.html", message=message, filled=filled, session=session)
+            return render_template("login.html", message=message, filled=filled, session=session, next_page=next_page)
         
 @app.route("/kirjaaulos")
 def logout():
     require_login()
     del session["user"]
     del session["user_id"]
+    del session["csrf_token"]
     return redirect ("/")
 
 @app.route("/rekisteroidy")
