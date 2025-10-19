@@ -13,9 +13,6 @@
 * Kuvan lisääminen reseptiin.
 * Reseptiin voi lisätä ainesosia.
 * Avainsanat on listattu erikseen ja niiden perusteella voi selata reseptejä.
-
-## Tulevat toiminnot
-
 * Reseptisivulla sitä voi kommentoida.
 * Käyttäjäsivu, jossa näkee käyttäjän aktiivisuuden.
 * Reseptiin voi lisätä valmiita avainsanoja (kuten "salaatti" ja "vegaaninen").
