@@ -1,1 +1,2 @@
-secret_key = "280928hdshfdkjfhqs99"
+"""Secret key configuration."""
+SECRET_KEY = "280928hdshfdkjfhqs99"
