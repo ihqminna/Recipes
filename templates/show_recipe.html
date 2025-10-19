@@ -46,9 +46,6 @@
       <h3><a href="/{{ comment.username }}" style="text-decoration: underline;">{{ comment.username }}</a></h3>
       <p>{{ comment.sent_at }}</p>
       <p>{{ comment.comment | show_lines }}</p>
-      {% if session.user_id == comment.user_id %}
-      <!-- add deleting or modifying comment-->
-      {% endif %}
     </div>
   {% endfor %}
 </div>
