@@ -3,7 +3,7 @@ from flask import Flask
 from flask import render_template, request, redirect, session, abort
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-import config, db, secrets
+import config, db, secrets, markupsafe
 import recipes, comments
 
 app = Flask(__name__)
@@ -348,6 +348,12 @@ def require_login():
 def check_csrf(csrf_token):
     if csrf_token != session["csrf_token"]:
         abort(403)
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 if __name__ == "__main__":
     app.run(debug=True)
