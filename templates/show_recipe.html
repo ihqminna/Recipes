@@ -29,7 +29,8 @@
     {% if session.user_id == recipe.user_id %}
     <a class="secondary_button" href="/muokkaa/{{ recipe.slug }}">Muokkaa reseptiä</a>
     <a class="secondary_button" href="/poista/{{ recipe.slug }}">Poista resepti</a>
-    {% endif %}
+    {% endif %}¨
+    <br>
   </div>
   <div style="max-width: 600px; min-width: 300px; margin: 8px">
     {% if recipe.image %}
@@ -37,4 +38,29 @@
     {% endif %}
   </div>
 </div>
+{% if comments %}
+<h2>Kommentit</h2>
+<div class="comments">
+  {% for comment in comments %}
+    <div class="comment">
+      <h3><a href="/{{ comment.username }}" style="text-decoration: underline;">{{ comment.username }}</a></h3>
+      <p>{{ comment.sent_at }}</p>
+      <p>{{ comment.comment }}</p>
+      {% if session.user_id == comment.user_id %}
+      <!-- add deleting or modifying comment-->
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% if session %}
+<form method="post">
+  <h2><label for="comment">Lisää kommentti</label></h2>
+  <textarea id="comment" type="textarea" cols="40" size="240" rows="6" name="comment" value="{{ comment }}"></textarea><br>
+  <input type="submit" name="action" class="secondary_button" value="Lisää kommentti" />
+</form>
+{% endif %}
+{% if message %}
+  <p>{{ message }}</p>
+{% endif %}
 {% endblock %}

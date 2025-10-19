@@ -144,7 +144,7 @@ def search_user(user):
     else:
         return render_template("/kirjaudu")
 
-@app.route("/resepti/<slug>")
+@app.route("/resepti/<slug>", methods=["GET", "POST"])
 def show_recipe(slug):
     recipe = recipes.get_recipe_by_slug(slug)
     if not recipe:
@@ -155,7 +155,17 @@ def show_recipe(slug):
     username = recipes.get_username(recipe["user_id"])
     ingredients = recipes.get_ingredients(recipe_id)
     tags = recipes.get_tags_by_recipe(recipe_id)
-    return render_template("show_recipe.html", username=username, recipe=recipe, ingredients=ingredients, tags=tags)
+    message = ""
+
+    if request.form.get("action") == "Lisää kommentti":
+        comment = request.form["comment"]
+        user_id = session["user_id"]
+        comments.add_comment(user_id, recipe_id, comment)
+        message = "Kiitos kommentistasi!"
+
+    comment_list = comments.get_comments_by_recipe(recipe_id)
+    print(comment_list[0]["username"])
+    return render_template("show_recipe.html", username=username, recipe=recipe, message=message, ingredients=ingredients, tags=tags, comments=comment_list)
 
 @app.route("/uusiresepti")
 def new_recipe():

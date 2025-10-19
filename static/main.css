@@ -153,6 +153,17 @@ body{
     font-size: 20px;
   }
 
+  .comments{
+    margin: 8px
+  }
+
+  .comment{
+    border-radius: 12px;
+    border: solid 1px #ff841f;
+    padding: 8px 24px;
+    margin-bottom: 24px;
+  }
+
   .sidebar > img{
     width: 48px;
     margin: 4px;
