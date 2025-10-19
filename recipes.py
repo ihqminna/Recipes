@@ -201,6 +201,52 @@ def create_slug(name):
         slug = slug + add
     return slug
 
+def recipe_count():
+    """Counts total number of recipes."""
+    sql = "SELECT COUNT(id) AS total FROM recipes"
+    count = db.query(sql,)
+    return count[0]["total"]
+
+def recipe_count_by_tag(slug):
+    """Counts total number of recipes with specific tag."""
+    sql = """
+    SELECT COUNT(R.id) 
+    AS total 
+    FROM recipes R
+    JOIN recipe_tag RT ON R.id = RT.recipe_id
+    JOIN tags T ON rt.tag_id = t.id
+    WHERE T.slug = ?
+    """
+    count = db.query(sql, [slug])
+    return count[0]["total"]
+
+def get_paged_recipes(page, page_size):
+    """Returns recipes of a specific page."""
+    sql = """
+    SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image
+    FROM recipes r
+    LIMIT ? OFFSET ?
+    """
+    limit = page_size
+    offset = page_size*(page-1)
+    recipes = db.query(sql, [limit, offset])
+    return handle_images(recipes)
+
+def get_recipes_paged_by_tag(slug, page, page_size):
+    """Returns recipes with a specific tag."""
+    sql = """
+    SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image
+    FROM recipes r
+    JOIN recipe_tag RT ON R.id = RT.recipe_id
+    JOIN tags T ON rt.tag_id = t.id
+    WHERE T.slug = ?
+    LIMIT ? OFFSET ?
+    """
+    limit = page_size
+    offset = page_size*(page-1)
+    recipes = db.query(sql, [slug, limit, offset])
+    return handle_images(recipes)
+
 def get_slug(recipe_id):
     """Returns recipe's slug."""
     slug = db.query("SELECT slug FROM recipes WHERE id = ?", [recipe_id])[0][0]
@@ -209,18 +255,6 @@ def get_slug(recipe_id):
 def get_recipes_tags():
     """Returns all tags."""
     return db.query("SELECT t.id, t.name, t.plural, t.slug FROM tags t",)
-
-def get_recipes_by_tag(slug):
-    """Returns recipes with a specific tag."""
-    sql = """
-    SELECT r.id, r.name, r.instructions, r.user_id, r.slug, r.image
-    FROM recipes r
-    JOIN recipe_tag RT ON R.id = RT.recipe_id
-    JOIN tags T ON rt.tag_id = t.id
-    WHERE T.slug = ?
-    """
-    recipes = db.query(sql, [slug])
-    return handle_images(recipes)
 
 def get_tags_by_recipe(recipe_id):
     """Returns tags of a specific recipe."""

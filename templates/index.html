@@ -15,4 +15,9 @@
   <input type="submit" class="secondary_button" value="Hae reseptejä" />
 </form>
 {{ super() }}
+<p>
+  <a href="/{{ page - 1 }}">&lt;&lt;</a>
+  Sivu {{ page }}/{{ page_count }}
+  <a href="/{{ page + 1 }}">&gt;&gt;</a>
+</p>
 {% endblock %}

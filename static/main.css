@@ -87,9 +87,15 @@ body{
     margin-top: 4px;
   }
 
+  @media only screen and (max-width: 1000px){
+    .recipe_list_item{
+      width: 45%;
+    }
+  }
+
   .recipe_list_item{
     margin: 16px 8px;
-    width: 45%;
+    width: 22%;
     border-radius: 12px;
     background-color: white;
     min-width: 200px;

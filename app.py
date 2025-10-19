@@ -1,13 +1,15 @@
 """Main functionality of application."""
 import sqlite3
 import secrets
+import time
 from flask import Flask
-from flask import render_template, request, redirect, session, abort
+from flask import render_template, request, redirect, session, abort, g
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 import markupsafe
 import config
 import db
+import math
 import recipes
 import comments
 
@@ -15,13 +17,28 @@ app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
 @app.route("/")
-def index():
-    """Shows frontpage."""
-    all_recipes = recipes.get_recipes()
-    if all_recipes:
-        recipes_count = len(all_recipes)
-        return render_template("index.html", count=recipes_count, recipes=all_recipes)
-    return render_template("index.html")
+@app.route("/<int:page>")
+def index(page=1):
+    """Shows all recipes."""
+    page_size = 24
+    recipe_count = recipes.recipe_count()
+    page_count = math.ceil(recipe_count/page_size)
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+    recipe_list = recipes.get_paged_recipes(page, page_size)
+    return render_template("index.html", recipes=recipe_list, page=page, page_count=page_count)
+    
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    elapsed_time = round(time.time() - g.start_time, 2)
+    print("elapsed time:", elapsed_time, "s")
+    return response
 
 @app.route("/kirjaudu")
 def login():
@@ -124,11 +141,18 @@ def keywords():
     return render_template("keywords.html", tags=tags)
 
 @app.route("/avainsanat/<slug>")
-def show_tag(slug):
+def show_tag(slug, page=1):
     """Shows recipes with specific tag."""
-    recipe_list = recipes.get_recipes_by_tag(slug)
+    page_size = 24
+    recipe_count = recipes.recipe_count_by_tag(slug)
+    page_count = math.ceil(recipe_count/page_size)
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+    recipe_list = recipes.get_recipes_paged_by_tag(slug, page, page_size)
     plural = recipes.get_tag_plural(slug)
-    return render_template("show_keyword.html", recipes=recipe_list, plural=plural)
+    return render_template("show_keyword.html", recipes=recipe_list, plural=plural, page=page, page_count=page_count)
 
 @app.route("/<user>")
 def show_user(user):
