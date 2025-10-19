@@ -75,7 +75,11 @@ body{
     display: flex;
     flex-flow: row wrap;
     margin-top: 24px;
-    max-width: 100%;
+    justify-content: space-around;
+  }
+
+  .main{
+    max-width: 90%;
   }
 
   .recipe_list_item:hover{
@@ -84,8 +88,8 @@ body{
   }
 
   .recipe_list_item{
-    margin: 8px;
-    max-width: 400px;
+    margin: 16px 8px;
+    width: 45%;
     border-radius: 12px;
     background-color: white;
     min-width: 200px;
