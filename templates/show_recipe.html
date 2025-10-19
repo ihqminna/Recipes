@@ -58,9 +58,7 @@
   <h2><label for="comment">Lisää kommentti</label></h2>
   <textarea id="comment" type="textarea" cols="40" size="240" rows="6" name="comment" value="{{ comment }}"></textarea><br>
   <input type="submit" name="action" class="secondary_button" value="Lisää kommentti" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
-{% endif %}
-{% if message %}
-  <p>{{ message }}</p>
 {% endif %}
 {% endblock %}

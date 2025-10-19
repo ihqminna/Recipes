@@ -3,10 +3,8 @@ from flask import Flask
 from flask import render_template, request, redirect, session, abort
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
-import config
-import db
-import recipes
-import comments
+import config, db, secrets
+import recipes, comments
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -22,12 +20,12 @@ def index():
 
 @app.route("/kirjaudu")
 def login():
-    return render_template("login.html", filled=[])
+    return render_template("login.html", filled=[], session=session)
 
 @app.route("/kirjaasisaan", methods=["GET", "POST"])
 def in_logger():
     if request.method == "GET":
-        return render_template("login.html", filled={})
+        return render_template("login.html", filled={}, session=session)
 
     if request.method == "POST":
         username = request.form["username"]
@@ -52,12 +50,13 @@ def in_logger():
         if check_password_hash(password_hash, password):
             session["user"] = username
             session["user_id"] = user["id"]
+            session["csrf_token"] = secrets.token_hex(16)
             url = "/" + username
             return redirect(url)
         else:
             filled = {"username": username}
             message =  "Väärä käyttäjätunnus tai salasana"
-            return render_template("login.html", message=message, filled=filled)
+            return render_template("login.html", message=message, filled=filled, session=session)
         
 @app.route("/kirjaaulos")
 def logout():
@@ -68,7 +67,7 @@ def logout():
 
 @app.route("/rekisteroidy")
 def register():
-    return render_template("register.html", filled=[])
+    return render_template("register.html", filled=[], session=session)
 
 @app.route("/uusikayttaja", methods=["GET", "POST"])
 def new_user():
@@ -155,22 +154,21 @@ def show_recipe(slug):
     username = recipes.get_username(recipe["user_id"])
     ingredients = recipes.get_ingredients(recipe_id)
     tags = recipes.get_tags_by_recipe(recipe_id)
-    message = ""
 
     if request.form.get("action") == "Lisää kommentti":
+        csrf_token = request.form["csrf_token"]
+        check_csrf(csrf_token)
         comment = request.form["comment"]
         user_id = session["user_id"]
         comments.add_comment(user_id, recipe_id, comment)
-        message = "Kiitos kommentistasi!"
 
     comment_list = comments.get_comments_by_recipe(recipe_id)
-    print(comment_list[0]["username"])
-    return render_template("show_recipe.html", username=username, recipe=recipe, message=message, ingredients=ingredients, tags=tags, comments=comment_list)
+    return render_template("show_recipe.html", username=username, session=session, recipe=recipe, ingredients=ingredients, tags=tags, comments=comment_list)
 
 @app.route("/uusiresepti")
 def new_recipe():
     require_login()
-    return render_template("new_recipe.html")
+    return render_template("new_recipe.html", session=session)
 
 @app.route("/kiitos")
 def thank_you():
@@ -181,6 +179,8 @@ def new():
     require_login()
     name = request.form["name"]
     name = str(name)
+    csrf_token = request.form["csrf_token"]
+    check_csrf(csrf_token)
     ingredients = request.form.getlist("ingredient")
     instructions = request.form["instructions"]
     tags = request.form.getlist("tag")
@@ -190,36 +190,36 @@ def new():
 
     if not len(name) > 0:
         message = "Lisää reseptille nimi"
-        return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", message=message, session=session, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     if not recipes.recipe_name_free(name):
         message = "Reseptin nimi on jo käytössä"
-        return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", message=message, session=session, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     slug = recipes.create_slug(name)
 
     if request.form.get("action") == "Lisää ainesosa":
         ingredients = recipes.clean_list(ingredients)
         ingredients.append("")
-        return render_template("new_recipe.html", name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", name=name, session=session, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     
     if request.form.get("action") == "Lisää avainsana":
         tags.append("")
-        return render_template("new_recipe.html", slug=slug, all_tags=all_tags, tags=tags, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
 
     if len(name) > 60 or len(instructions) > 300:
         message = "Tarkista tekstikenttien pituudet"
-        return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", message=message, session=session, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
 
     if imagefile:
         if imagefile.filename == "":
             message = "Lisää kuvatiedostolle nimi."
-            return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)
+            return render_template("new_recipe.html", message=message, session=session, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)
         elif not imagefile.filename.endswith(".jpg"):
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
-            return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)
+            return render_template("new_recipe.html", message=message, session=session, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)
         image = imagefile.read()
         if len(image) > 1000*1024:
             message = "Liian suuri kuvatiedosto."
-            return render_template("new_recipe.html", message=message, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)            
+            return render_template("new_recipe.html", message=message, session=session, name=name, tags=tags, all_tags=all_tags, ingredients=ingredients, instructions=instructions)            
     else: image = None
     username = session["user"]
     recipes.add_recipe_by_user(name, tags, ingredients, instructions, slug, username, image)
@@ -237,9 +237,11 @@ def remove_recipe(slug):
         abort(403)
     
     if request.method == "GET":
-        return render_template("remove_recipe.html", recipe=recipe)
+        return render_template("remove_recipe.html", recipe=recipe, session=session)
 
     if request.method == "POST":
+        csrf_token = request.form["csrf_token"]
+        check_csrf(csrf_token)
         if "remove" in request.form:
             recipes.remove_recipe(recipe["id"])
             return redirect("/")
@@ -267,7 +269,7 @@ def edit_recipe(slug):
         abort(404)
     if recipe["user_id"] != session["user_id"]:
         abort(403)
-    return render_template("edit_recipe.html", slug=slug, name=name, all_tags=all_tags, instructions=instructions, tags=tags, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
+    return render_template("edit_recipe.html", slug=slug, session=session, name=name, all_tags=all_tags, instructions=instructions, tags=tags, imagefile=imagefile, recipe_id=recipe_id, ingredients=ingredients)
 
 @app.route("/haku", methods=["GET"])
 def search():
@@ -278,6 +280,8 @@ def search():
 @app.route("/tallenna", methods=["POST"])
 def save_recipe():
     require_login()
+    csrf_token = request.form["csrf_token"]
+    check_csrf(csrf_token)
     recipe_id = request.form["recipe_id"]
     old_recipe = recipes.get_recipe_by_id(recipe_id)[0]
     slug = recipes.get_slug(recipe_id)
@@ -299,41 +303,45 @@ def save_recipe():
         instructions = old_recipe["instructions"]
     if len(name) > 60 or len(instructions) > 300:
         message = "Tarkista tekstikenttien pituudet"
-        return render_template("new_recipe.html", slug=slug, all_tags=all_tags, tags=tags, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("new_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     imagefile = request.files["image"]
     if request.form.get("action") == "Lisää ainesosa":
         ingredients = recipes.clean_list(ingredients)
         ingredients.append("")
-        return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("edit_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, recipe_id=recipe_id, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     if request.form.get("action") == "Lisää avainsana":
         tags.append("")
-        return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+        return render_template("edit_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, recipe_id=recipe_id, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
     if imagefile:
         if imagefile.filename == "":
             message = "Lisää kuvatiedostolle nimi."
-            return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)
+            return render_template("edit_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)
         elif not imagefile.filename.endswith(".jpg"):
             message = "Kuvalla on väärä tiedostomuoto, lisää kuva jpg-muodossa."
-            return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)
+            return render_template("edit_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)
         image = imagefile.read()
         if len(image) > 1024*1024:
             message = "Liian suuri kuvatiedosto."
-            return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)            
+            return render_template("edit_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions)            
     else: image = old_recipe["image"]
     if len(name) > 0:
         if name != old_name and not recipes.recipe_name_free(name):
             return "Reseptin nimi on jo käytössä"
-            return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
+            return render_template("edit_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile)
         else:    
             slug = recipes.create_slug(name)
             recipes.update_recipe(name, ingredients, instructions, recipe_id, slug, image, tags)
             return redirect("/resepti/" + slug)
     else:
         message = "Lisää reseptille nimi"
-        return render_template("edit_recipe.html", slug=slug, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile) 
+        return render_template("edit_recipe.html", slug=slug, session=session, all_tags=all_tags, tags=tags, recipe_id=recipe_id, message=message, name=name, ingredients=ingredients, instructions=instructions, imagefile=imagefile) 
 
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf(csrf_token):
+    if csrf_token != session["csrf_token"]:
         abort(403)
 
 if __name__ == "__main__":

@@ -72,6 +72,7 @@ def add_recipe_by_user(name, tags, ingredients, instructions, slug, username, im
 def remove_recipe(recipe_id):
     db.execute("DELETE FROM recipe_ingredient WHERE recipe_id = ?", [recipe_id])
     db.execute("DELETE FROM recipe_tag WHERE recipe_id = ?", [recipe_id])
+    db.execute("DELETE FROM comments WHERE recipe_id = ?", [recipe_id])
     db.execute("DELETE FROM recipes WHERE id = ?", [recipe_id])
 
 def update_recipe(name, ingredients, instructions, recipe_id, slug, image, tags):

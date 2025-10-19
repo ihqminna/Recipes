@@ -6,6 +6,7 @@
 <h1>Poistetaanko resepti {{ recipe.name }}?</h1>
 <form action="/poista/{{ recipe.slug }}" method="post">
   <input class="primary_button" type="submit" name="remove" value="Poista resepti">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
 <p>
   <a class="secondary_button" href="/resepti/{{ recipe.slug }}">Palaa reseptiin</a>
